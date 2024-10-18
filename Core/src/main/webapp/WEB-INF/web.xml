@@ -7,16 +7,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>index</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>Dispatcher</display-name>
-    <servlet-name>Dispatcher</servlet-name>
-    <servlet-class>io.htmlcss.api.Dispatcher</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Dispatcher</servlet-name>
-    <url-pattern>/Dispatcher</url-pattern>
+    <url-pattern>/home</url-pattern>
   </servlet-mapping>
 </web-app>
