@@ -19,5 +19,16 @@ img.title {
 .wrapper {
 	display: flex;
 	justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
     gap: 30px;   
+}
+
+.donut {
+    width: 200px;
+    height: auto;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 10px 10px 8px rgba(10, 10, 10, 0.1);
+    padding: 10px;
 }

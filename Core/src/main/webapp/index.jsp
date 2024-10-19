@@ -21,7 +21,7 @@
         	</picture>
         </div>
         <div class="outer">
-        	<div class="wrapper">
+        	<div class="wrapper" id="content">
         		
         	</div>
         </div>

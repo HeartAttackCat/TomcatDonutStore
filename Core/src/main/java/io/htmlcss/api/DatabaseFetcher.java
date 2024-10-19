@@ -14,9 +14,9 @@ import java.util.List;
 
 public class DatabaseFetcher {
 	Connection dbConnection = null;
-	private String dbUrl = "jdbc:mysql://localhost:3306/DonutShop";
-	private String dbUser = "webdev";
-	private String dbPassword = "abc123";
+	private String dbUrl = "jdbc:mysql://localhost:3306/DonutFactory";
+	private String dbUser = "root";
+	private String dbPassword = "Scoompers56";
 	
 	/**
 	 * Constructor for the databaseFetcher class
