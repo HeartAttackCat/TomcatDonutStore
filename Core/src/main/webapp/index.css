@@ -1,0 +1,34 @@
+body {
+    margin: 0px;
+    background-color: rgb(208, 205, 197);
+}
+.mnb {
+    width: 100%;
+    height: auto;
+    display: flex;
+    background-color: #595959;
+    justify-content: center;
+    border-bottom-style: solid;
+    border-bottom-color: #A66249;
+}
+img.title {
+	width: 100%;
+	height: auto;
+	background-color: #595959;
+}
+.wrapper {
+	display: flex;
+	justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 30px;   
+}
+
+.donut {
+    width: 200px;
+    height: auto;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 10px 10px 8px rgba(10, 10, 10, 0.1);
+    padding: 10px;
+}
