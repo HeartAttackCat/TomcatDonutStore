@@ -21,6 +21,3 @@ select * from donuts;
 select * from inventory;
 
 select * from dOrder;
-
-drop table inventory, dOrder, donuts;
-drop database donutFactory;
