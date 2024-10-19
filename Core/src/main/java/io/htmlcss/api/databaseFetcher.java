@@ -177,7 +177,12 @@ public class databaseFetcher {
 		return executeQuery("SELECT * FROM orders WHERE product_id = " + product_id);
 	}
 
+
 	public List<List<String>> getProducts(){
 		return executeQuery("select * from Products");
+	}
+
+	public List<List<String>> getDonuts() {
+		return executeQuery("SELECT * from Donuts");
 	}
 }
