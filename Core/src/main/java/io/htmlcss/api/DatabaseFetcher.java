@@ -1,8 +1,8 @@
 package io.htmlcss.api;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class databaseFetcher {
+public class DatabaseFetcher {
 	Connection dbConnection = null;
 	private String dbUrl = "jdbc:mysql://localhost:3306/DonutShop";
 	private String dbUser = "webdev";
@@ -21,7 +21,7 @@ public class databaseFetcher {
 	/**
 	 * Constructor for the databaseFetcher class
 	 */
-	public databaseFetcher() {
+	public DatabaseFetcher() {
 
 		// Check for a ~/.env/DB_CONFIG file
 		// If it exists, read the database connection information from it
@@ -135,7 +135,7 @@ public class databaseFetcher {
 	 * @param query The query to execute
 	 * @return The result of the query as a list of lists of strings
 	 */
-	public List<List<String>> executeQuery(String query) {
+	private List<List<String>> executeQuery(String query) {
 		// This is a cursed way to do this, but I'm not sure how to do it better...
 		// Outer list is the rows, inner list is the column values. 0th index is the column names.
 		List<List<String>> return_query = null;
