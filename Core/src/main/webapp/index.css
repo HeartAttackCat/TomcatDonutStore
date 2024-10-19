@@ -2,7 +2,6 @@ body {
     margin: 0px;
     background-color: rgb(208, 205, 197);
 }
-
 .mnb {
     width: 100%;
     height: auto;
@@ -12,15 +11,13 @@ body {
     border-bottom-style: solid;
     border-bottom-color: #A66249;
 }
-
 img.title {
 	width: 100%;
 	height: auto;
 	background-color: #595959;
 }
-
 .wrapper {
 	display: flex;
 	justify-content: center;
-	
+    gap: 30px;   
 }
