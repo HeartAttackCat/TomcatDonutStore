@@ -17,6 +17,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>api</servlet-name>
-    <url-pattern>/api</url-pattern>
+    <url-pattern>/api/donut</url-pattern>
   </servlet-mapping>
 </web-app>
