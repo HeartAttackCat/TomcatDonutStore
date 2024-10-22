@@ -12,5 +12,4 @@ public class DBFactory {
 			return db;
 		}
 	}
-
 }
