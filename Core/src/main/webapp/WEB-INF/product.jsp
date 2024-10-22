@@ -7,9 +7,13 @@
 		<title>Product Details</title>
 	</head>
 	<body>
-		<% 
-		io.htmlcss.api.DatabaseFetcher db = io.htmlcss.api.DBFactory.getDatabaseFetcher();
-		out.println(db.getDonuts());
+		<%!io.htmlcss.db.DatabaseFetcher db = io.htmlcss.db.DBFactory.getDatabaseFetcher(); %>
+		<%!io.htmlcss.model.Donut donut; %>
+		<%
+		donut = db.getDonut(Integer.parseInt(request.getParameter("product")));
 		%>
+		
+		<h1> <%= donut.getType() %> </h1>
+		
 	</body>
 </html>

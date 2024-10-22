@@ -3,6 +3,8 @@ package io.htmlcss.api;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import io.htmlcss.db.DBFactory;
+import io.htmlcss.db.DatabaseFetcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

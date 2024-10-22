@@ -23,7 +23,7 @@
     <description></description>
     <display-name>product</display-name>
     <servlet-name>product</servlet-name>
-    <servlet-class>io.htmlcss.api.product</servlet-class>
+    <servlet-class>io.htmlcss.api.Product</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>product</servlet-name>

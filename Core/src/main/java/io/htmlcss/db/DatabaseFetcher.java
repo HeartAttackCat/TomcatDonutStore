@@ -1,4 +1,4 @@
-package io.htmlcss.api;
+package io.htmlcss.db;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.htmlcss.model.Donut;
 
 public class DatabaseFetcher {
 	Connection dbConnection = null;
@@ -184,6 +186,28 @@ public class DatabaseFetcher {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public Donut getDonut(int donutID) {
+		Donut donut = new Donut();
+		Statement stmt;
+		try {
+			stmt = dbConnection.createStatement();
+			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts WHERE id = " + donutID);
+			
+			records.next();
+			donut.setId(records.getInt(1));
+			donut.setType(records.getString(2));
+			donut.setFlavor(records.getString(3));
+			
+			return donut;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	public List<List<String>> getOrderById(int order_id){
