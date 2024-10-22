@@ -4,9 +4,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Error</title>
 </head>
 <body>
+	<img src="./images/bird.jpg">
 	<p>Error 404, product was not found</p>
 </body>
 </html>

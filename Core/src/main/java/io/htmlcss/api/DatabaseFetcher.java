@@ -17,7 +17,7 @@ public class DatabaseFetcher {
 	Connection dbConnection = null;
 	private String dbUrl = "jdbc:mysql://localhost:3306/DonutFactory";
 	private String dbUser = "root";
-	private String dbPassword = "Scoompers56";
+	private String dbPassword = "love4futurewife";
 	
 	/**
 	 * Constructor for the databaseFetcher class
