@@ -1,5 +1,11 @@
 package io.htmlcss.model;
 
+/**
+ * @author Hunter Lane
+ * 
+ * This object is a model object for passing or storing a donut object.
+ * The database will return this model.
+ */
 public class Donut {
 	
 	private String type;

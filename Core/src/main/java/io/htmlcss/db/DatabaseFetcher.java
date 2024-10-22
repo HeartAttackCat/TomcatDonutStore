@@ -15,11 +15,21 @@ import java.util.List;
 
 import io.htmlcss.model.Donut;
 
+
 public class DatabaseFetcher {
 	Connection dbConnection = null;
 	private String dbUrl = "jdbc:mysql://localhost:3306/DonutFactory";
-	private String dbUser = "root";
-	private String dbPassword = "love4futurewife";
+	/**
+	 * WARNING DO NOT USE THESE TO SET DATABASE CREDENTIALS.
+	 * 
+	 * 
+	 * If you want to set the credentials please follow the directions below
+	 * - Make a folder in your home directory called .env
+	 * - 
+
+	 */
+	private String dbUser = "no"; // PLEASE DO NOT SET THIS
+	private String dbPassword = "no"; // PLEASE DO NOT SET THIS
 	
 	/**
 	 * Constructor for the databaseFetcher class
@@ -34,9 +44,8 @@ public class DatabaseFetcher {
 			System.out.println("Using database connection information from " + configFile);
 			// Read the database connection information from the config file
 			// and update the dbUrl, dbUser, and dbPassword variables accordingly
-			boolean hasUrl = false;
-			boolean hasUser = false;
-			boolean hasPassword = false;
+			boolean hasUrl = false, hasUser = false, hasPassword = false;
+			
 			try (BufferedReader reader = new BufferedReader(new FileReader(configFile))) {
 				String line;
 				while ((line = reader.readLine()) != null) {
@@ -196,11 +205,8 @@ public class DatabaseFetcher {
 			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts WHERE id = " + donutID);
 			
 			records.next();
-			donut.setId(records.getInt(1));
-			donut.setType(records.getString(2));
-			donut.setFlavor(records.getString(3));
 			
-			return donut;
+			return parseDonut(records);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -208,6 +214,37 @@ public class DatabaseFetcher {
 		}
 		
 		return null;
+	}
+	
+	public ArrayList<Donut> getMenu() {
+		ArrayList<Donut> donuts = new ArrayList<Donut>();
+		Statement stmt;
+		try {
+			stmt = dbConnection.createStatement();
+			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts");
+			
+			while(records.next())
+			{
+				Donut donut = parseDonut(records);
+				donuts.add(donut);
+			}
+			
+			return donuts;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return donuts;
+	}
+	
+	private Donut parseDonut(ResultSet record) throws SQLException {
+		Donut donut = new Donut();
+		donut.setId(record.getInt(1));
+		donut.setType(record.getString(2));
+		donut.setFlavor(record.getString(3));
+		donut.setDescription("Its a donut. It has flavors and other things. Meow meow meow.");
+		donut.setImg("bird.jpg");
+		return donut;
 	}
 	
 	public List<List<String>> getOrderById(int order_id){

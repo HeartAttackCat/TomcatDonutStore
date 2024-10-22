@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.ArrayList,io.htmlcss.model.Donut,io.htmlcss.db.DatabaseFetcher,io.htmlcss.db.DBFactory"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,9 +21,18 @@
         </div>
         <div class="outer">
         	<div class="wrapper" id="content">
-        		
+        		<%! DatabaseFetcher db = DBFactory.getDatabaseFetcher();%>  
+        		<%
+        		ArrayList<Donut> donuts = db.getMenu();
+        		for (Donut donut : donuts) {
+        			out.println("<div class=\"donut\">");
+        			out.println("<h3>");
+        			out.write(donut.getType());
+        			out.println("</h3>");
+        			out.println("</div>");
+        		}
+        		%>
         	</div>
         </div>
-        <script src="./scripts/main.js" async defer></script>
     </body>
 </html>
