@@ -19,4 +19,14 @@
     <servlet-name>api</servlet-name>
     <url-pattern>/api</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>product</display-name>
+    <servlet-name>product</servlet-name>
+    <servlet-class>io.htmlcss.api.product</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>product</servlet-name>
+    <url-pattern>/product</url-pattern>
+  </servlet-mapping>
 </web-app>

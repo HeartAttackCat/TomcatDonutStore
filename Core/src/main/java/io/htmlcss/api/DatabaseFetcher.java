@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -169,6 +170,22 @@ public class DatabaseFetcher {
 		return return_query;
 	}
 	
+	public boolean checkDonut(int donutID) {
+		Statement stmt;
+		try {
+			stmt = dbConnection.createStatement();
+			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts WHERE id = " + donutID);
+			if (records.next())
+				return true;
+			else
+				return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public List<List<String>> getOrderById(int order_id){
 		return executeQuery("SELECT * FROM orders WHERE order_id = " + order_id);
 	}
@@ -185,4 +202,5 @@ public class DatabaseFetcher {
 	public List<List<String>> getDonuts() {
 		return executeQuery("SELECT * from Donuts");
 	}
+	
 }

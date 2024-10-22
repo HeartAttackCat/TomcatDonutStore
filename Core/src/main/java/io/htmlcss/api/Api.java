@@ -22,7 +22,7 @@ public class Api extends HttpServlet {
      */
     public Api() {
         // TODO Auto-generated constructor stub
-    	db = new DatabaseFetcher();
+    	db = DBFactory.getDatabaseFetcher();
     }
 
 	/**
