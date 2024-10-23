@@ -82,104 +82,6 @@ public class DatabaseFetcher {
 		}
 		catch (Exception e) {e.printStackTrace();} 
 	}
-
-	/**
-	 * Convert a query result to a JSON string
-	 * @param query The query result to convert
-	 * @return The JSON string representation of the query result
-	 */
-    public static String toJSON(List<List<String>> query) {
-        if (query == null || query.isEmpty()) {
-            return "[]";  // Return empty JSON array if input is null or empty
-        }
-
-        StringBuilder json = new StringBuilder();
-        json.append("[\n");  // Start of the JSON array
-
-        // The first list contains column names
-        List<String> columns = query.get(0);
-
-        // Iterate over each row starting from index 1 (skip the column names)
-        for (int i = 1; i < query.size(); i++) {
-            List<String> row = query.get(i);
-            json.append("  {");
-
-            for (int j = 0; j < columns.size(); j++) {
-                String columnName = columns.get(j);
-                String cellValue = row.get(j);
-
-                // Append column name and value in JSON format
-                json.append("\"").append(columnName).append("\": ")
-                    .append("\"").append(escapeJson(cellValue)).append("\"");
-
-                // Append a comma if not the last column
-                if (j < columns.size() - 1) {
-                    json.append(", ");
-                }
-            }
-
-            json.append("}");
-            // Append a comma and newline if not the last row
-            if (i < query.size() - 1) {
-                json.append(",");
-            }
-            json.append("\n");
-        }
-
-        json.append("]");  // End of the JSON array
-        return json.toString();
-    }
-
-    // Helper function to escape special characters in JSON
-    private static String escapeJson(String value) {
-        if (value == null) {
-            return "";  // Handle null values as empty strings
-        }
-        return value.replace("\\", "\\\\")  // Escape backslashes
-                    .replace("\"", "\\\"")  // Escape quotes
-                    .replace("\n", "\\n")   // Escape newlines
-                    .replace("\r", "\\r")   // Escape carriage returns
-                    .replace("\t", "\\t");  // Escape tabs
-    }
-
-	/**
-	 * Execute a query on the database
-	 * @param query The query to execute
-	 * @return The result of the query as a list of lists of strings
-	 */
-	private List<List<String>> executeQuery(String query) {
-		// This is a cursed way to do this, but I'm not sure how to do it better...
-		// Outer list is the rows, inner list is the column values. 0th index is the column names.
-		List<List<String>> return_query = null;
-		
-		try {
-			Statement stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery(query);
-			ResultSetMetaData rsmd = records.getMetaData();
-			
-			return_query = new ArrayList<List<String>>();
-			
-			List<String> column_names = new ArrayList<String>();
-			int col_len = rsmd.getColumnCount();
-			for(int i = 1; i <= col_len; i++) {
-				column_names.add(rsmd.getColumnName(i));
-			}
-			return_query.add(column_names);
-			
-			while(records.next()) {
-				List<String> row = new ArrayList<String>();
-				for(int i = 1; i <= col_len; i++) {
-					row.add(records.getString(i));
-				}
-				return_query.add(row);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return return_query;
-	}
 	
 	public boolean checkDonut(int donutID) {
 		Statement stmt;
@@ -243,26 +145,9 @@ public class DatabaseFetcher {
 		donut.setType(record.getString(2));
 		donut.setFlavor(record.getString(3));
 		donut.setPrice(record.getFloat(4));
-		donut.setDescription("Its a donut. It has flavors and other things. Meow meow meow.");
-		donut.setImg("bird.jpg");
+		donut.setDescription(record.getString(5));
+		donut.setImg(record.getString(6));
 		return donut;
-	}
-	
-	public List<List<String>> getOrderById(int order_id){
-		return executeQuery("SELECT * FROM orders WHERE order_id = " + order_id);
-	}
-
-	public List<List<String>> getOrdersByProductId(int product_id){
-		return executeQuery("SELECT * FROM orders WHERE product_id = " + product_id);
-	}
-
-
-	public List<List<String>> getProducts(){
-		return executeQuery("select * from Products");
-	}
-
-	public List<List<String>> getDonuts() {
-		return executeQuery("SELECT * from Donuts");
 	}
 	
 }
