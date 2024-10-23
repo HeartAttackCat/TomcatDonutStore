@@ -12,6 +12,8 @@ import io.htmlcss.db.DatabaseFetcher;
 
 /**
  * Servlet implementation class product
+ * 
+ * Dispatches product page if properties are correct.
  */
 public class Product extends HttpServlet {
 	

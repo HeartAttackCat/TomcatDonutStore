@@ -242,6 +242,7 @@ public class DatabaseFetcher {
 		donut.setId(record.getInt(1));
 		donut.setType(record.getString(2));
 		donut.setFlavor(record.getString(3));
+		donut.setPrice(record.getFloat(4));
 		donut.setDescription("Its a donut. It has flavors and other things. Meow meow meow.");
 		donut.setImg("bird.jpg");
 		return donut;

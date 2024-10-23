@@ -13,6 +13,7 @@ public class Donut {
 	private String description;
 	private String img;
 	private String flavor;
+	private float price;
 	
 	public Donut(Integer id, String type, String flavor, String desc, String img) {
 		this.id = id;
@@ -24,6 +25,14 @@ public class Donut {
 	
 	public Donut() {
 		
+	}
+	
+	public void setPrice(float price) {
+		this.price = price;
+	}
+	
+	public float getPrice() {
+		return this.price;
 	}
 	
 	public String getType() {
