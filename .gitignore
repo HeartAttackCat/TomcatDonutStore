@@ -2,3 +2,4 @@
 Servers/*
 /Servers/
 Core/src/main/webapp/WEB-INF/dbenv
+Servers/.settings/org.eclipse.wst.server.core.prefs
