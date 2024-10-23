@@ -1,4 +1,4 @@
 /.metadata/
 Servers/*
-Servers
+/Servers/
 Core/src/main/webapp/WEB-INF/dbenv
