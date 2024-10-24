@@ -133,7 +133,7 @@
 
 				<!-- Product image -->
 				<div class="image-section">
-					<img src="./images/donut.png" alt="<%= donut.getType() %> Image">
+					<img src="./images/<%=donut.getImg()%>.png" alt="<%= donut.getType() %> Image">
 				</div>
 			</div>
 			
