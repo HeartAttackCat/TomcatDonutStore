@@ -14,7 +14,7 @@ public class Cart {
      * @param buyer
      * @param items
      */
-    public Cart(Customer buyer, ArrayList<Donut> items){
+    public Cart(Customer buyer, ArrayList<Order> items){
         this.buyer = buyer;
         this.items = items;
 
@@ -26,6 +26,6 @@ public class Cart {
     }
 
     public ArrayList<Order> getItems(){
-        return this.items
+        return this.items;
     }
 }

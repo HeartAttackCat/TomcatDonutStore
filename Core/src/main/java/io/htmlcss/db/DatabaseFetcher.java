@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -153,14 +154,14 @@ public class DatabaseFetcher {
 	}
 
 	public int insertCart(Cart cart){
-		float totalPrice = 0.0;
+		float totalPrice = 0;
 		int totalQuantity = 0;
-		int orderID = this.generateOrderID();
+		int orderID = 0;
 		int customerID = 0;
 
         SimpleDateFormat str = new SimpleDateFormat("dd-MM-yyyy"); 
         String date = str.format(new Date()); 
-		
+        orderID = this.generateOrderID(date);
 		ArrayList<Order> items = cart.getItems();
 		Order temp = null;
 
@@ -171,37 +172,33 @@ public class DatabaseFetcher {
 		for (int i = 0; i < items.size(); i++) {
             temp = items.get(i);
 			totalQuantity += temp.getQuantity();
-			totalPrice += temp.getQuantity() * temp.getItem().getPrice()
+			totalPrice += temp.getQuantity() * temp.getItem().getPrice();
         }
 
 		// Mass insert into the table!
 		for (int i = 0; i < items.size(); i++){
-			this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID);
+			this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date);
 		}
 
 		return 0;
 	}
 
-	private int insertOrder(Order order, int orderID, float tPrice, float tQuantity, int customerID, String date){
-		Statement stmt;
-		Date today = new Date();
+	private int insertOrder(Order order, int orderID, float tPrice, int tQuantity, int customerID, String date){
+	
 		try {
-			stmt = dbConnection.createStatement("Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES
-			(? ? ? ? ? ? ? ? ?)");
-			// Gets the date.
-
-
+		    String sql = "Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES (? ? ? ? ? ? ? ? ?)";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, orderID);
-	        stmt.setInt(2, order.getDonut().getID());
+	        stmt.setInt(2, order.getItem().getId());
 	        stmt.setString(3, date);
 	        stmt.setInt(4, customerID);
             stmt.setInt(5, order.getQuantity());
-			stmt.setFloat(6, order.getDonut().getPrice()); // Pretty sure this will need to change data types.
+			stmt.setFloat(6, order.getItem().getPrice()); // Pretty sure this will need to change data types.
 			stmt.setInt(7, tQuantity);
 			stmt.setFloat(8, tPrice);
 			stmt.setInt(9, 0); // Incomplete order.
 			
-			ResultSet records = stmt.executeUpdate();
+			stmt.executeUpdate();
 			return 0; // Success
 			
 		} catch (SQLException e) {
@@ -214,21 +211,21 @@ public class DatabaseFetcher {
 	 * This will save the customers data to the table.
 	 */
 	private int insertCustomer(Customer customer){
-		Statement stmt;
 		try {
-			stmt = dbConnection.createStatement("INSERT INTO donutFactory.customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) 
-			VALUES (? ? ? ? ? ? ?)");
+		    String sql = "INSERT INTO donutFactory.customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES (? ? ? ? ? ? ?)";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
 
 			
 			stmt.setString(1, customer.getFirstName());
-	        stmt.setInt(2, customer.getLastName());
-	        stmt.setString(3, customer.getZipCode());
+	        stmt.setString(2, customer.getLastName());
+	        stmt.setInt(3, customer.getZipCode());
 	        stmt.setString(4, customer.getAddress());
             stmt.setString(5, customer.getPhoneNumber());
-			stmt.setString(6, customer.getPhoneNumber())
+			stmt.setString(6, customer.getPhoneNumber());
 			stmt.setInt(7, customer.getCardID());
 			
-			ResultSet records = stmt.executeUpdate();
+			stmt.executeUpdate();
 			return 0; // Success
 			
 		} catch (SQLException e) {
@@ -240,12 +237,13 @@ public class DatabaseFetcher {
 	/**
 	 * This will generate a new order id for us to insert assign to our order.
 	 */
-	private int generateOrderID(){
+	private int generateOrderID(String date){
 		int max;
 		Statement stmt;
 		try {
 			stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery("select max(orderID) from dOrder");
+			String sql = "select max(customerID) from donutFactory.customerInfowhere purchasedate='{}'".formatted(date);
+			ResultSet records = stmt.executeQuery(sql);
 			max = records.getInt("orderID");
 			return max + 1;
 			
@@ -254,7 +252,7 @@ public class DatabaseFetcher {
 			e.printStackTrace();
 		}
 		
-		return -1;
+		return 0;
 	}
 
 	/**
@@ -265,7 +263,7 @@ public class DatabaseFetcher {
 		Statement stmt;
 		try {
 			stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery("select max(customerID) from donutFactory.customerInfo");
+			ResultSet records = stmt.executeQuery("select max(customerID) from donutFactory.customerInfowhere purchasedate='2024-10-10'");
 			max = records.getInt("customerID");
 			return max;
 			
