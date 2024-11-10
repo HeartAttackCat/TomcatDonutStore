@@ -11,9 +11,9 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>api</display-name>
-    <servlet-name>api</servlet-name>
-    <servlet-class>io.htmlcss.api.Api</servlet-class>
+    <display-name>product</display-name>
+    <servlet-name>product</servlet-name>
+    <servlet-class>io.htmlcss.api.Product</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>api</servlet-name>
