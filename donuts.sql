@@ -4,7 +4,13 @@ Create table donuts (id int, dType varchar (256), flavor varchar(256), price flo
 
 Create table inventory (id int, quantity int, donutID int, startBakingTime datetime, endBakingTime datetime, expireTime date);
 
-Create table dOrder (orderNumber int, itemID int,purchaseDate date, customerName varchar (256), quantity int, price float, totalQuant int, totalPrice float);
+Create table dOrder (orderID int, itemID int,purchaseDate date, customerID int, quantity int, price float, totalQuant int, totalPrice float, complete boolean);
+
+Create table customerInfo (customerID int NOT NULL AUTO_INCREMENT, firstName varchar(256), lastName varchar(256), zipCode int, customerAddress varchar(256), phoneNumber varchar(256), email varchar(256), cardID varchar(256), primary key (customerID)) ;
+
+INSERT INTO customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES 
+( "John", "Goettsche", 88220, "Dirt Lane", "(505)-262-1460", "Sandwhich@bread.com", "1234567890123456"),
+( "Ramaya", "Ramaya", 88324, "Road", "(505)-314-1518", "Induction@nmt.com", "0852582479531379");
 
 INSERT INTO donuts (id, dType, flavor, price, donutDesc, img) VALUES 
 (1, "Raised" , "Glazed", 0.69, "Our classic choice! The glazed donut, what is there not to like. The classic good guy of every story. Not too adventurous but always with that glazed goodness. For all newcomers, we recommend starting here as we know our donuts can be overbearing on the taste buds. Think of it as a form of training for our future challenges (The filled lemon donut.). However, the glaze donut is perfect, some scholars even argue that it was gifted from the Heavens above. It's just too perfect to be man made.", "raisedGlazed"),
@@ -21,11 +27,13 @@ INSERT INTO inventory (id, quantity, donutID, startBakingTime, endBakingTime, ex
 (2, 20, 7, "2024-10-12 5:00:00", "2024-10-12 7:00:00", "2024-10-14"), (3, 20, 1, "2024-10-12 5:00:00","2024-10-12 7:00:00", "2024-10-14");
 
 
-Insert Into dOrder (orderNumber, itemID, purchaseDate, customerName, quantity, price, totalQuant, totalPrice) VALUES (1, 2, "2024-10-10", "John Smith", 10,  10.00, 20, 15.00), 
-(1, 4, "2024-10-10", "John Smith", 10,  5.00, 20, 15.00), (2, 3, "2024-10-9", "John Smith", 1,  2.00, 1, 2.0);
+Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES (1, 2, "2024-10-10", 1, 10,  10.00, 20, 15.00, 1), 
+(1, 4, "2024-10-10", 1, 10,  5.00, 20, 15.00, 1), (2, 3, "2024-10-9", 2, 1,  2.00, 1, 2.0, 1);
 
 select * from donuts;
 
 select * from inventory;
 
 select * from dOrder;
+
+select * from customerInfo;
