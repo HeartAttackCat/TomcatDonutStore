@@ -159,7 +159,7 @@ public class DatabaseFetcher {
 		int orderID = 0;
 		int customerID = 0;
 
-        SimpleDateFormat str = new SimpleDateFormat("dd-MM-yyyy"); 
+        SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd"); 
         String date = str.format(new Date()); 
         orderID = this.generateOrderID(date);
 		ArrayList<Order> items = cart.getItems();
@@ -186,7 +186,7 @@ public class DatabaseFetcher {
 	private int insertOrder(Order order, int orderID, float tPrice, int tQuantity, int customerID, String date){
 	
 		try {
-		    String sql = "Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES (? ? ? ? ? ? ? ? ?)";
+		    String sql = "Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, orderID);
 	        stmt.setInt(2, order.getItem().getId());
@@ -212,7 +212,7 @@ public class DatabaseFetcher {
 	 */
 	private int insertCustomer(Customer customer){
 		try {
-		    String sql = "INSERT INTO donutFactory.customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES (? ? ? ? ? ? ?)";
+		    String sql = "INSERT INTO donutFactory.customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			
 
@@ -223,7 +223,7 @@ public class DatabaseFetcher {
 	        stmt.setString(4, customer.getAddress());
             stmt.setString(5, customer.getPhoneNumber());
 			stmt.setString(6, customer.getPhoneNumber());
-			stmt.setInt(7, customer.getCardID());
+			stmt.setString(7, customer.getCardID());
 			
 			stmt.executeUpdate();
 			return 0; // Success
@@ -242,17 +242,18 @@ public class DatabaseFetcher {
 		Statement stmt;
 		try {
 			stmt = dbConnection.createStatement();
-			String sql = "select max(customerID) from donutFactory.customerInfowhere purchasedate='{}'".formatted(date);
+			String sql = "select max(orderID) from donutFactory.dOrder where purchaseDate=\"" + date + "\"";
 			ResultSet records = stmt.executeQuery(sql);
 			max = records.getInt("orderID");
 			return max + 1;
-			
+			// If no orders for that day currently exist.
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
+			return 0;
 		}
 		
-		return 0;
+//		return 0;
 	}
 
 	/**
@@ -263,7 +264,7 @@ public class DatabaseFetcher {
 		Statement stmt;
 		try {
 			stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery("select max(customerID) from donutFactory.customerInfowhere purchasedate='2024-10-10'");
+			ResultSet records = stmt.executeQuery("select max(customerID) from customerInfo");
 			max = records.getInt("customerID");
 			return max;
 			

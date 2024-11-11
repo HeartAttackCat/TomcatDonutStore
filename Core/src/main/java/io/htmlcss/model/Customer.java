@@ -10,7 +10,7 @@ public class Customer {
     private String address = "";
     private String phoneNumber = "";
     private String email = "";
-    private int cardID = 0; // card used to purchase. Int is probably the wrong data type lol
+    private String cardID = ""; // card used to purchase. Int was definitely the wrong data type.
     private int zipCode = 0;
 
     /**
@@ -23,7 +23,7 @@ public class Customer {
      * @param cardID
      * @param zipCode
      */
-    public Customer(String firstName, String lastName, String address, String phoneNumber, String email, int cardID, int zipCode){
+    public Customer(String firstName, String lastName, String address, String phoneNumber, String email, String cardID, int zipCode){
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -58,7 +58,7 @@ public class Customer {
         return this.zipCode;
     }
     
-    public int getCardID(){
+    public String getCardID(){
         return this.cardID;
     }
 }
