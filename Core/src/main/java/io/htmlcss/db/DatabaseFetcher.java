@@ -222,7 +222,7 @@ public class DatabaseFetcher {
 	        stmt.setInt(3, customer.getZipCode());
 	        stmt.setString(4, customer.getAddress());
             stmt.setString(5, customer.getPhoneNumber());
-			stmt.setString(6, customer.getPhoneNumber());
+			stmt.setString(6, customer.getEmail());
 			stmt.setString(7, customer.getCardID());
 			
 			stmt.executeUpdate();
@@ -246,6 +246,9 @@ public class DatabaseFetcher {
 			ResultSet records = stmt.executeQuery(sql);
 			while(records.next()) {
 				max = records.getInt(1);
+			}
+			if (max == 0){
+				return max;
 			}
 			return max + 1;
 			// If no orders for that day currently exist.
