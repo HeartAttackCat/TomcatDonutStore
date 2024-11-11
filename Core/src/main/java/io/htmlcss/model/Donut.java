@@ -15,6 +15,14 @@ public class Donut {
 	private String flavor;
 	private float price;
 	
+	/**
+	 * Constructor
+	 * @param id
+	 * @param type
+	 * @param flavor
+	 * @param desc
+	 * @param img
+	 */
 	public Donut(Integer id, String type, String flavor, String desc, String img) {
 		this.id = id;
 		this.type = type;

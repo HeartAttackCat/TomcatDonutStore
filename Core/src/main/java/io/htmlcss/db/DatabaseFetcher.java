@@ -6,14 +6,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.htmlcss.model.Donut;
+import java.text.ParseException; 
+import java.text.SimpleDateFormat; 
+import java.util.Date; 
+import io.htmlcss.model.*;
 
 
 public class DatabaseFetcher {
@@ -148,6 +151,137 @@ public class DatabaseFetcher {
 		donut.setDescription(record.getString(5));
 		donut.setImg(record.getString(6));
 		return donut;
+	}
+
+	public int insertCart(Cart cart){
+		float totalPrice = 0;
+		int totalQuantity = 0;
+		int orderID = 0;
+		int customerID = 0;
+
+        SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd"); 
+        String date = str.format(new Date()); 
+        orderID = this.generateOrderID(date);
+		ArrayList<Order> items = cart.getItems();
+		Order temp = null;
+
+		this.insertCustomer(cart.getBuyer());
+		customerID = this.getCustomerID();
+
+		// Obtain total price and quantity
+		for (int i = 0; i < items.size(); i++) {
+            temp = items.get(i);
+			totalQuantity += temp.getQuantity();
+			totalPrice += temp.getQuantity() * temp.getItem().getPrice();
+        }
+
+		// Mass insert into the table!
+		for (int i = 0; i < items.size(); i++){
+			this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date);
+		}
+
+		return 0;
+	}
+
+	private int insertOrder(Order order, int orderID, float tPrice, int tQuantity, int customerID, String date){
+	
+		try {
+		    String sql = "Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, orderID);
+	        stmt.setInt(2, order.getItem().getId());
+	        stmt.setString(3, date);
+	        stmt.setInt(4, customerID);
+            stmt.setInt(5, order.getQuantity());
+			stmt.setFloat(6, order.getItem().getPrice()); // Pretty sure this will need to change data types.
+			stmt.setInt(7, tQuantity);
+			stmt.setFloat(8, tPrice);
+			stmt.setInt(9, 0); // Incomplete order.
+			
+			stmt.executeUpdate();
+			return 0; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1; // failure
+	}
+
+	/**
+	 * This will save the customers data to the table.
+	 */
+	private int insertCustomer(Customer customer){
+		try {
+		    String sql = "INSERT INTO donutFactory.customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+
+			
+			stmt.setString(1, customer.getFirstName());
+	        stmt.setString(2, customer.getLastName());
+	        stmt.setInt(3, customer.getZipCode());
+	        stmt.setString(4, customer.getAddress());
+            stmt.setString(5, customer.getPhoneNumber());
+			stmt.setString(6, customer.getEmail());
+			stmt.setString(7, customer.getCardID());
+			
+			stmt.executeUpdate();
+			return 0; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1; // failure
+	}
+
+	/**
+	 * This will generate a new order id for us to insert assign to our order.
+	 */
+	private int generateOrderID(String date){
+		int max = 0;
+		Statement stmt;
+		try {
+			stmt = dbConnection.createStatement();
+			String sql = "select max(orderID) from donutFactory.dOrder where purchaseDate=\"" + date + "\"";
+			ResultSet records = stmt.executeQuery(sql);
+			while(records.next()) {
+				max = records.getInt(1);
+			}
+			if (max == 0){
+				return max;
+			}
+			return max + 1;
+			// If no orders for that day currently exist.
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+//			return 0;
+		}
+		
+		return 0;
+	}
+
+	/**
+	 * Obtains newest customer ID assuming they are the most recent customer.
+	 */
+	private int getCustomerID(){
+		int max = 0;
+		Statement stmt;
+		try {
+			stmt = dbConnection.createStatement();
+			ResultSet records = stmt.executeQuery("select max(customerID) from customerInfo");
+			while(records.next()) {
+				max = records.getInt(1);
+			}
+			return max;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return -1;
+	
 	}
 	
 }
