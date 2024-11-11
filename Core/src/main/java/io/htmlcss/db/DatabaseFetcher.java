@@ -238,34 +238,38 @@ public class DatabaseFetcher {
 	 * This will generate a new order id for us to insert assign to our order.
 	 */
 	private int generateOrderID(String date){
-		int max;
+		int max = 0;
 		Statement stmt;
 		try {
 			stmt = dbConnection.createStatement();
 			String sql = "select max(orderID) from donutFactory.dOrder where purchaseDate=\"" + date + "\"";
 			ResultSet records = stmt.executeQuery(sql);
-			max = records.getInt("orderID");
+			while(records.next()) {
+				max = records.getInt(1);
+			}
 			return max + 1;
 			// If no orders for that day currently exist.
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-//			e.printStackTrace();
-			return 0;
+			e.printStackTrace();
+//			return 0;
 		}
 		
-//		return 0;
+		return 0;
 	}
 
 	/**
 	 * Obtains newest customer ID assuming they are the most recent customer.
 	 */
 	private int getCustomerID(){
-		int max;
+		int max = 0;
 		Statement stmt;
 		try {
 			stmt = dbConnection.createStatement();
 			ResultSet records = stmt.executeQuery("select max(customerID) from customerInfo");
-			max = records.getInt("customerID");
+			while(records.next()) {
+				max = records.getInt(1);
+			}
 			return max;
 			
 		} catch (SQLException e) {
