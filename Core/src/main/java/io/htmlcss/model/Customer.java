@@ -23,7 +23,12 @@ public class Customer {
      * @param cardID
      * @param zipCode
      */
-    public Customer(String firstName, String lastName, String address, String phoneNumber, String email, String cardID, int zipCode){
+    public Customer(String firstName, String lastName, String address, String phoneNumber, String email, String cardID, int zipCode)
+        throws IllegalArgumentException {
+        if (firstName == null || lastName == null || address == null || phoneNumber == null || email == null || cardID == null) {
+            throw new IllegalArgumentException("All fields must be provided");
+        }
+        
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
