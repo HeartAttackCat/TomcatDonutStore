@@ -284,4 +284,89 @@ public class DatabaseFetcher {
 	
 	}
 	
+	
+	
+	public int insertDonut(Donut donut) {
+		try {
+		    String sql = "INSERT INTO donutFactory.donuts (dType, flavor, price, donutDesc, img) VALUES (?, ?, ?, ?, ?)";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+			stmt.setString(1, donut.getType());
+			stmt.setString(2, donut.getFlavor());
+			stmt.setFloat(3, donut.getPrice());
+			stmt.setString(4, donut.getDescription());
+			stmt.setString(5, donut.getImg());
+			
+			stmt.executeUpdate();
+			return 0; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1; // failure
+	}
+	
+	
+	public int modifyDonut(Donut donut) {
+		try {
+			if (this.checkDonutExist(donut.getId()) == -1) {
+				return -1;
+			}
+		    String sql = "Update donutFactory.donuts SET dType=?, flavor=?, price=?, donutDesc=?, img=? where id=?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+			stmt.setString(1, donut.getType());
+			stmt.setString(2, donut.getFlavor());
+			stmt.setFloat(3, donut.getPrice());
+			stmt.setString(4, donut.getDescription());
+			stmt.setString(5, donut.getImg());
+			stmt.setInt(6, donut.getId());
+			
+			stmt.executeUpdate();
+			return 0; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1; // failure
+	
+	}
+	
+	public int deleteDonut(int donut) {
+		try {
+			if (this.checkDonutExist(donut) == -1) {
+				return -1;
+			}
+		    String sql = "delete from donutFactory.donuts where id=?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, donut);
+			
+			stmt.executeUpdate();
+			return 0; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1; // failure
+	
+	}
+	
+	private int checkDonutExist(int donut) {
+		int max = -1;
+		Statement stmt;
+		try {
+			stmt = dbConnection.createStatement();
+			ResultSet records = stmt.executeQuery("select max(customerID) from customerInfo");
+			while(records.next()) {
+				max = records.getInt(1);
+			}
+			return max;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return -1;
+	}
 }
