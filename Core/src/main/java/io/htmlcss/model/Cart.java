@@ -3,29 +3,42 @@
  * information.
  */
 package io.htmlcss.model;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Cart {
     private Customer buyer;
-    private ArrayList<Order> items;
+    private List<Order> items;
 
     /**
      * Constructor
-     * @param buyer
-     * @param items
+     * @param buyer Customer placing the order
+     * @param items List of orders
      */
-    public Cart(Customer buyer, ArrayList<Order> items){
+    public Cart(Customer buyer, List<Order> items)
+        throws IllegalArgumentException {
+        if (buyer == null) {
+            throw new IllegalArgumentException("Buyer cannot be null");
+        }
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException("Items cannot be null or empty");
+        }
         this.buyer = buyer;
         this.items = items;
-
     }
 
-
+    /**
+     * Get the buyer of the cart
+     * @return Customer object
+     */
     public Customer getBuyer(){
         return this.buyer;
     }
 
-    public ArrayList<Order> getItems(){
+    /**
+     * Get the list of orders in the cart
+     * @return List of orders
+     */
+    public List<Order> getItems(){
         return this.items;
     }
 }

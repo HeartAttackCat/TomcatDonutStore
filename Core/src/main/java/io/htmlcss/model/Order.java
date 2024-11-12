@@ -8,20 +8,33 @@ public class Order {
     private int quantity;
 
     /**
-     * Constructor
-     * @param item
-     * @param quantity
+     * Order constructor
+     * @param item Donut object
+     * @param quantity Quantity of donuts
      */
     public Order(Donut item, int quantity){
+        if (item == null) {
+            throw new IllegalArgumentException("Item cannot be null");
+        }
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
         this.item = item;
         this.quantity = quantity;
     }
 
-
+    /**
+     * Get the donut object
+     * @return Donut object
+     */
     public Donut getItem(){
         return this.item;
     }
 
+    /**
+     * Get the quantity of donuts
+     * @return Quantity of donuts
+     */
     public int getQuantity(){
         return this.quantity;
     }

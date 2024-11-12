@@ -1,22 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" version="5.0">
+<!-- Root element of the web application descriptor, defines the app's configuration -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+
+  <!-- Display name of the web application, shown in server logs or admin consoles -->
   <display-name>Core</display-name>
+
+  <!-- Define a servlet for the main page -->
   <servlet>
+    <!-- Name of the servlet that maps to the main page -->
     <servlet-name>index</servlet-name>
+    <!-- Specifies the JSP file that serves as the main page -->
     <jsp-file>/index.jsp</jsp-file>
   </servlet>
+
+  <!-- Mapping the 'index' servlet to the '/home' URL path -->
   <servlet-mapping>
     <servlet-name>index</servlet-name>
     <url-pattern>/home</url-pattern>
   </servlet-mapping>
+
+  <!-- Define a servlet for handling product-related requests -->
   <servlet>
     <description></description>
+    <!-- Display name for the product servlet, can be used in admin consoles -->
     <display-name>product</display-name>
+    <!-- Name of the servlet for easy reference -->
     <servlet-name>product</servlet-name>
+    <!-- Java class that handles requests for this servlet -->
     <servlet-class>io.htmlcss.api.Product</servlet-class>
   </servlet>
+
+  <!-- Mapping the 'api' servlet to the '/api/donut' URL path -->
   <servlet-mapping>
     <servlet-name>api</servlet-name>
     <url-pattern>/api/donut</url-pattern>
   </servlet-mapping>
+
+  <!-- Configuration for user login and error handling -->
+  <login-config>
+    <!-- Specifies the authentication method, using form-based login here -->
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+      <!-- URL for the login page -->
+      <form-login-page>/login</form-login-page> <!-- TODO: Login page URL -->
+      <!-- URL for the error page if login fails -->
+      <form-error-page>/error</form-error-page> <!-- TODO: Error page URL -->
+    </form-login-config>
+  </login-config>
+
+  <!-- Define security roles for access control -->
+  <security-role>
+    <!-- Role assigned to general employees with restricted access -->
+    <role-name> employee </role-name>
+    <!-- Role assigned to administrators with elevated access -->
+    <role-name> admin </role-name>
+  </security-role>
+
 </web-app>

@@ -21,19 +21,23 @@ import io.htmlcss.model.*;
 
 public class DatabaseFetcher {
 	Connection dbConnection = null;
-	private String dbUrl = "jdbc:mysql://localhost:3306/DonutFactory";
 	/**
-	 * WARNING DO NOT USE THESE TO SET DATABASE CREDENTIALS.
+	 * Configuration guide:
 	 * 
-	 * 
-	 * If you want to set the credentials please follow the directions below
 	 * - Make a folder in your home directory called .env
-	 * - 
-
+	 * - Create a file called DB_CONFIG in the .env folder
+	 * - Add the following lines to the file:
+	 * dbUrl=YOUR_URL
+	 * dbUser=YOUR_USERNAME
+	 * dbPassword=YOUR_PASSWORD
+	 * 
+	 * Or just run this line in your terminal:
+	 * mkdir -p ~/.env && echo "dbUrl=YOUR_URL" > ~/.env/DB_CONFIG && echo "dbUser=YOUR_USERNAME" >> ~/.env/DB_CONFIG && echo "dbPassword=YOUR_PASSWORD" >> ~/.env/DB_CONFIG
 	 */
-	private String dbUser = "no"; // PLEASE DO NOT SET THIS
-	private String dbPassword = "no"; // PLEASE DO NOT SET THIS
-	
+	private String dbUrl = "jdbc:mysql://localhost:3306/DonutFactory"; // Read from the DB_CONFIG file (see above)
+	private String dbUser = null; // Read from the DB_CONFIG file (see above)
+	private String dbPassword = null; // Read from the DB_CONFIG file (see above)
+
 	/**
 	 * Constructor for the databaseFetcher class
 	 */
@@ -76,7 +80,9 @@ public class DatabaseFetcher {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println("Using default database connection information");
+			// Exit if the config file doesn't exist
+			System.err.println("Database connection file not found: " + configFile);
+			System.exit(1);
 		}
 
 		try {
@@ -86,46 +92,56 @@ public class DatabaseFetcher {
 		catch (Exception e) {e.printStackTrace();} 
 	}
 	
+	/**
+	 * This method will check if the donut exists in the database.
+	 * @param donutID The id of the donut to check
+	 * @return True if the donut exists, false otherwise
+	 */
 	public boolean checkDonut(int donutID) {
-		Statement stmt;
 		try {
-			stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts WHERE id = " + donutID);
+			String query = "SELECT * FROM donutfactory.donuts WHERE id = ?";
+			PreparedStatement stmt = dbConnection.prepareStatement(query);
+			stmt.setInt(1, donutID);
+			ResultSet records = stmt.executeQuery();
 			if (records.next())
 				return true;
 			else
 				return false;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
 	}
 	
+	/**
+	 * This method will return a donut object from the database.
+	 * @param donutID The id of the donut to retrieve
+	 * @return The donut object
+	 */
 	public Donut getDonut(int donutID) {
-		Donut donut = new Donut();
-		Statement stmt;
 		try {
-			stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts WHERE id = " + donutID);
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM donutfactory.donuts WHERE id = ?");
+			stmt.setInt(1, donutID);
+			ResultSet records = stmt.executeQuery();
 			
 			records.next();
-			
 			return parseDonut(records);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return null;
 	}
 	
-	public ArrayList<Donut> getMenu() {
-		ArrayList<Donut> donuts = new ArrayList<Donut>();
-		Statement stmt;
+	/**
+	 * This method will return a list of all donuts in the database.
+	 * @return A list of all donuts
+	 */
+	public List<Donut> getMenu() {
+		List<Donut> donuts = new ArrayList<Donut>();
 		try {
-			stmt = dbConnection.createStatement();
+			Statement stmt = dbConnection.createStatement();
 			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts");
 			
 			while(records.next())
@@ -142,6 +158,12 @@ public class DatabaseFetcher {
 		return donuts;
 	}
 	
+	/**
+	 * Converts a ResultSet record into a Donut object.
+	 * @param record The record to convert
+	 * @return The Donut object
+	 * @throws SQLException If there is an error parsing the record
+	 */
 	private Donut parseDonut(ResultSet record) throws SQLException {
 		Donut donut = new Donut();
 		donut.setId(record.getInt(1));
@@ -153,7 +175,12 @@ public class DatabaseFetcher {
 		return donut;
 	}
 
-	public int insertCart(Cart cart){
+	/**
+	 * Adds a customers cart to the current orders
+	 * @param cart The cart to add
+	 * @return True if the cart was added, false otherwise
+	 */
+	public boolean insertCart(Cart cart){
 		float totalPrice = 0;
 		int totalQuantity = 0;
 		int orderID = 0;
@@ -162,7 +189,7 @@ public class DatabaseFetcher {
         SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd"); 
         String date = str.format(new Date()); 
         orderID = this.generateOrderID(date);
-		ArrayList<Order> items = cart.getItems();
+		List<Order> items = cart.getItems();
 		Order temp = null;
 
 		this.insertCustomer(cart.getBuyer());
@@ -177,13 +204,24 @@ public class DatabaseFetcher {
 
 		// Mass insert into the table!
 		for (int i = 0; i < items.size(); i++){
-			this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date);
+			if (this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date))
+				return false;
 		}
 
-		return 0;
+		return true;
 	}
 
-	private int insertOrder(Order order, int orderID, float tPrice, int tQuantity, int customerID, String date){
+	/**
+	 * This will insert an order into the database.
+	 * @param order The order to insert
+	 * @param orderID The order id
+	 * @param tPrice The total price
+	 * @param tQuantity The total quantity
+	 * @param customerID The customer id
+	 * @param date The date of the order (yyyy-MM-dd)
+	 * @return True if the order was inserted, false otherwise
+	 */
+	private boolean insertOrder(Order order, int orderID, float tPrice, int tQuantity, int customerID, String date){
 	
 		try {
 		    String sql = "Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -199,18 +237,20 @@ public class DatabaseFetcher {
 			stmt.setInt(9, 0); // Incomplete order.
 			
 			stmt.executeUpdate();
-			return 0; // Success
+			return true; // Success
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1; // failure
+		return false; // failure
 	}
 
 	/**
-	 * This will save the customers data to the table.
+	 * Inserts a customer into the database.
+	 * @param customer The customer to insert
+	 * @return True if the customer was inserted, false otherwise
 	 */
-	private int insertCustomer(Customer customer){
+	private boolean insertCustomer(Customer customer){
 		try {
 		    String sql = "INSERT INTO donutFactory.customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
@@ -226,24 +266,25 @@ public class DatabaseFetcher {
 			stmt.setString(7, customer.getCardID());
 			
 			stmt.executeUpdate();
-			return 0; // Success
+			return true; // Success
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1; // failure
+		return false; // failure
 	}
 
 	/**
 	 * This will generate a new order id for us to insert assign to our order.
+	 * @param date The date of the order
+	 * @return The order id
 	 */
 	private int generateOrderID(String date){
 		int max = 0;
-		Statement stmt;
 		try {
-			stmt = dbConnection.createStatement();
-			String sql = "select max(orderID) from donutFactory.dOrder where purchaseDate=\"" + date + "\"";
-			ResultSet records = stmt.executeQuery(sql);
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT MAX(orderID) FROM donutFactory.dOrder WHERE purchaseDate = ?");
+			stmt.setString(1, date);
+			ResultSet records = stmt.executeQuery();
 			while(records.next()) {
 				max = records.getInt(1);
 			}
@@ -253,9 +294,8 @@ public class DatabaseFetcher {
 			return max + 1;
 			// If no orders for that day currently exist.
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-//			return 0;
+			// return 0;
 		}
 		
 		return 0;
@@ -276,7 +316,6 @@ public class DatabaseFetcher {
 			return max;
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -284,9 +323,11 @@ public class DatabaseFetcher {
 	
 	}
 	
-	
-	
-	public int insertDonut(Donut donut) {
+	/**
+	 * Inserts a donut into the database.
+	 * @param donut The donut to insert
+	 */
+	public boolean insertDonut(Donut donut) {
 		try {
 		    String sql = "INSERT INTO donutFactory.donuts (dType, flavor, price, donutDesc, img) VALUES (?, ?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
@@ -298,19 +339,23 @@ public class DatabaseFetcher {
 			stmt.setString(5, donut.getImg());
 			
 			stmt.executeUpdate();
-			return 0; // Success
+			return true; // Success
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1; // failure
+		return false; // failure
 	}
 	
-	
-	public int modifyDonut(Donut donut) {
+	/**
+	 * Modifies a donut in the database.
+	 * @param donut The donut to modify
+	 * @return True if the donut was modified, false otherwise
+	 */
+	public boolean modifyDonut(Donut donut) {
 		try {
-			if (this.checkDonutExist(donut.getId()) == -1) {
-				return -1;
+			if (!this.checkDonut(donut.getId())) {
+				return false;
 			}
 		    String sql = "Update donutFactory.donuts SET dType=?, flavor=?, price=?, donutDesc=?, img=? where id=?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
@@ -323,50 +368,38 @@ public class DatabaseFetcher {
 			stmt.setInt(6, donut.getId());
 			
 			stmt.executeUpdate();
-			return 0; // Success
+			return true; // Success
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1; // failure
+		return false; // failure
 	
 	}
 	
-	public int deleteDonut(int donut) {
+	/**
+	 * Deletes a donut from the database.
+	 * @param donut The donutID to delete
+	 * @return True if the donut was deleted, false otherwise (donut likely doesn't exist)
+	 */
+	public boolean deleteDonut(int donut) {
 		try {
-			if (this.checkDonutExist(donut) == -1) {
-				return -1;
+			if (!this.checkDonut(donut)) {
+				return false;
 			}
 		    String sql = "delete from donutFactory.donuts where id=?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, donut);
 			
 			stmt.executeUpdate();
-			return 0; // Success
+			return true; // Success
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1; // failure
+		return false; // failure
 	
 	}
 	
-	private int checkDonutExist(int donut) {
-		int max = -1;
-		Statement stmt;
-		try {
-			stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery("select max(customerID) from customerInfo");
-			while(records.next()) {
-				max = records.getInt(1);
-			}
-			return max;
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return -1;
-	}
+
 }
