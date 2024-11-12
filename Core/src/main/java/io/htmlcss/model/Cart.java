@@ -1,5 +1,5 @@
 /**
- * A basic container for holding information related holding customer card 
+ * A basic container for holding information related holding customer cart 
  * information.
  */
 package io.htmlcss.model;
