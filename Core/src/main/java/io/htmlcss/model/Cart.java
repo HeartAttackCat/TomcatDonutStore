@@ -1,12 +1,13 @@
 /**
- * A basic container for holding information related holding customer cart 
+ * A basic container for holding information related holding customer card 
  * information.
  */
 package io.htmlcss.model;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Cart {
-    private Customer buyer;
+    private Customer buyer = null;
     private List<Order> items;
 
     /**
