@@ -60,10 +60,16 @@ public class Cart {
      * @param donutID ID of the donut to add
      * @param quantity Quantity of the donut to add
      */
-    public boolean addDonut(int donutID, int quantity) throws IllegalArgumentException {
+    public boolean addDonuts(int donutID, int quantity) throws IllegalArgumentException {
     	for(Order i: items) {
     		if(i.getItem().getId() == donutID) {
-    			i.setQuantity(i.getQuantity() + quantity);
+                int q = i.getQuantity() + quantity;
+    			if (q <= 0) {
+                    // This is a removal
+    				items.remove(i);
+    			} else {
+    				i.setQuantity(q);
+    			}
     			return true;
     		}
     	}
@@ -75,5 +81,13 @@ public class Cart {
         }
         items.add(new Order(d, quantity));
     	return true;
+    }
+
+    /**
+     * Remove a donut from the cart
+     * @param donutID ID of the donut to remove
+     */
+    public boolean removeDonuts(int donutID, int quantity) {
+        return addDonuts(donutID, quantity * -1);
     }
 }
