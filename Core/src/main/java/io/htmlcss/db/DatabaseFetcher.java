@@ -418,16 +418,17 @@ public class DatabaseFetcher {
 	 * @param range The number of days back we wish to go.
 	 * @return Raw sales data.
 	 */
-	public ReportData generateSalesReport(String date, int range) {
+	public ReportData generateSalesReport(String date, int dateRange) {
 		ReportData data = new ReportData();
 		Integer id;
 		Integer quant;
 		Float price;
 		try {
-			String query = "select itemID, quantity, price from dOrder where purchaseDate > STR_TO_DATE('?', \"%Y-%m-%d\") - ? and purchaseDate <= STR_TO_DATE('?', \"%Y-%m-%d\")";
+			String query = "select itemID, quantity, price from dOrder where purchaseDate > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and purchaseDate <= STR_TO_DATE(?, \"%Y-%m-%d\")";
 			PreparedStatement stmt = dbConnection.prepareStatement(query);
+			
 			stmt.setString(1, date);
-			stmt.setInt(2, range);
+			stmt.setInt(2, dateRange);
 			stmt.setString(3, date);
 			ResultSet records = stmt.executeQuery();
 			
@@ -452,7 +453,7 @@ public class DatabaseFetcher {
 			Integer id;
 			Integer quant;
 			try {
-				String query = "select id, quantity from inventory where expireTime > STR_TO_DATE('?', \"%Y-%m-%d\") - ? and expireTime <= STR_TO_DATE('?', \"%Y-%m-%d\")";
+				String query = "select id, quantity from inventory where expireTime > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
 				PreparedStatement stmt = dbConnection.prepareStatement(query);
 				stmt.setString(1, date);
 				stmt.setInt(2, range);
