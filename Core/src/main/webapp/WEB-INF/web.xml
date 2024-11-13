@@ -33,12 +33,6 @@
     <servlet-class>io.htmlcss.api.Product</servlet-class>
   </servlet>
 
-  <!-- Mapping the 'api' servlet to the '/api/donut' URL path -->
-  <servlet-mapping>
-    <servlet-name>api</servlet-name>
-    <url-pattern>/api/donut</url-pattern>
-  </servlet-mapping>
-
   <!-- Configuration for user login and error handling -->
   <login-config>
     <!-- Specifies the authentication method, using form-based login here -->
@@ -58,5 +52,13 @@
     <!-- Role assigned to administrators with elevated access -->
     <role-name> admin </role-name>
   </security-role>
+  <servlet>
+  	<servlet-name>product</servlet-name>
+  	<servlet-class>io.htmlcss.api.Product</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>product</servlet-name>
+  	<url-pattern>/product</url-pattern>
+  </servlet-mapping>
 
 </web-app>
