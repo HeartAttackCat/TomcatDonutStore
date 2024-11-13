@@ -1,5 +1,8 @@
 package io.htmlcss.model;
 
+import io.htmlcss.db.DBFactory;
+import io.htmlcss.db.DatabaseFetcher;
+
 /**
  * @author Hunter Lane
  * 
@@ -129,5 +132,15 @@ public class Donut {
 	 */
 	public void setFlavor(String flavor) {
 		this.flavor = flavor;
+	}
+
+	/**
+	 * Get a donut object from the database
+	 * @param donutID ID of the donut
+	 * @return Donut object
+	 */
+	public static Donut getDonut(int donutID) {
+		DatabaseFetcher db = DBFactory.getDatabaseFetcher();
+		return db.getDonut(donutID);
 	}
 }

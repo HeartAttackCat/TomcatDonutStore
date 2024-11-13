@@ -4,7 +4,6 @@
  */
 package io.htmlcss.model;
 import java.util.List;
-import java.util.ArrayList;
 
 public class Cart {
     private Customer buyer = null;
@@ -54,5 +53,27 @@ public class Cart {
     		cost += d.getPrice() * q;
     	}
     	return cost;
+    }
+
+    /*
+     * Add a donut to the cart
+     * @param donutID ID of the donut to add
+     * @param quantity Quantity of the donut to add
+     */
+    public boolean addDonut(int donutID, int quantity) throws IllegalArgumentException {
+    	for(Order i: items) {
+    		if(i.getItem().getId() == donutID) {
+    			i.setQuantity(i.getQuantity() + quantity);
+    			return true;
+    		}
+    	}
+
+        // Donut not found in cart, add new order
+        Donut d = Donut.getDonut(donutID);
+        if(d == null) {
+        	return false;
+        }
+        items.add(new Order(d, quantity));
+    	return true;
     }
 }
