@@ -297,6 +297,7 @@ public class DatabaseFetcher {
 			while(records.next()) {
 				max = records.getInt(1);
 			}
+			System.out.println(max);
 			if (max == -1){
 				return 0;
 			}
@@ -417,21 +418,59 @@ public class DatabaseFetcher {
 	 * @param range The number of days back we wish to go.
 	 * @return Raw sales data.
 	 */
-	public boolean generateSalesReport(String date, int range) {
+	public ReportData generateSalesReport(String date, int range) {
+		ReportData data = new ReportData();
+		Integer id;
+		Integer quant;
+		Float price;
 		try {
-			String query = "select * from dOrder where purchaseDate > STR_TO_DATE('?', \"%Y-%m-%d\") - ? and purchaseDate <= STR_TO_DATE('?', \"%Y-%m-%d\");";
+			String query = "select itemID, quantity, price from dOrder where purchaseDate > STR_TO_DATE('?', \"%Y-%m-%d\") - ? and purchaseDate <= STR_TO_DATE('?', \"%Y-%m-%d\")";
 			PreparedStatement stmt = dbConnection.prepareStatement(query);
 			stmt.setString(1, date);
 			stmt.setInt(2, range);
 			stmt.setString(3, date);
 			ResultSet records = stmt.executeQuery();
+			
+			// Adds it all into the data object
 			while (records.next()){
+				id = records.getInt(1);
+				quant = records.getInt(2);
+				price = records.getFloat(3);
+				data.addItemQuantity(id, quant);
+				data.addItemPrice(id, price);
 			}
-			return true;
+			
+			return data;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return null;
 		}
+	}
+		
+		public ReportData generateStaleReport(String date, int range) {
+			ReportData data = new ReportData();
+			Integer id;
+			Integer quant;
+			try {
+				String query = "select id, quantity from inventory where expireTime > STR_TO_DATE('?', \"%Y-%m-%d\") - ? and expireTime <= STR_TO_DATE('?', \"%Y-%m-%d\")";
+				PreparedStatement stmt = dbConnection.prepareStatement(query);
+				stmt.setString(1, date);
+				stmt.setInt(2, range);
+				stmt.setString(3, date);
+				ResultSet records = stmt.executeQuery();
+				
+				// Adds it all into the data object
+				while (records.next()){
+					id = records.getInt(1);
+					quant = records.getInt(2);
+					data.addItemQuantity(id, quant);
+				}
+				
+				return data;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
 	}
 
 }
