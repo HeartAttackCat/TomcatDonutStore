@@ -165,13 +165,21 @@ public class DatabaseFetcher {
 	 * @throws SQLException If there is an error parsing the record
 	 */
 	private Donut parseDonut(ResultSet record) throws SQLException {
-		Donut donut = new Donut();
-		donut.setId(record.getInt(1));
-		donut.setType(record.getString(2));
-		donut.setFlavor(record.getString(3));
-		donut.setPrice(record.getFloat(4));
-		donut.setDescription(record.getString(5));
-		donut.setImg(record.getString(6));
+		int id = 0;
+		String type = "";
+		String flavor = "";
+		float price = (float)0;
+		String desc = "";
+		String img = "";
+		
+		id = record.getInt(1);
+		type = record.getString(2);
+		flavor = record.getString(3);
+		price = record.getFloat(4);
+		desc = record.getString(5);
+		img = record.getString(6);
+		Donut donut = new Donut(id, type, flavor, desc, img);
+		donut.setPrice(price);
 		return donut;
 	}
 
@@ -183,7 +191,7 @@ public class DatabaseFetcher {
 	public boolean insertCart(Cart cart){
 		float totalPrice = 0;
 		int totalQuantity = 0;
-		int orderID = 0;
+		int orderID = 0; // TODO fix this
 		int customerID = 0;
 
         SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -201,10 +209,10 @@ public class DatabaseFetcher {
 			totalQuantity += temp.getQuantity();
 			totalPrice += temp.getQuantity() * temp.getItem().getPrice();
         }
-
 		// Mass insert into the table!
+		System.out.println(items.size());
 		for (int i = 0; i < items.size(); i++){
-			if (this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date))
+			if (!this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date))
 				return false;
 		}
 
@@ -235,14 +243,15 @@ public class DatabaseFetcher {
 			stmt.setInt(7, tQuantity);
 			stmt.setFloat(8, tPrice);
 			stmt.setInt(9, 0); // Incomplete order.
-			
 			stmt.executeUpdate();
+			
 			return true; // Success
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return false; // failure
 		}
-		return false; // failure
+		
 	}
 
 	/**
@@ -280,7 +289,7 @@ public class DatabaseFetcher {
 	 * @return The order id
 	 */
 	private int generateOrderID(String date){
-		int max = 0;
+		int max = -1;
 		try {
 			PreparedStatement stmt = dbConnection.prepareStatement("SELECT MAX(orderID) FROM donutFactory.dOrder WHERE purchaseDate = ?");
 			stmt.setString(1, date);
@@ -288,8 +297,9 @@ public class DatabaseFetcher {
 			while(records.next()) {
 				max = records.getInt(1);
 			}
-			if (max == 0){
-				return max;
+			System.out.println(max);
+			if (max == -1){
+				return 0;
 			}
 			return max + 1;
 			// If no orders for that day currently exist.
@@ -401,5 +411,67 @@ public class DatabaseFetcher {
 	
 	}
 	
+	
+	/**
+	 * Obtains data starting from a given date and until a certain range.
+	 * @param date Our starting date.
+	 * @param range The number of days back we wish to go.
+	 * @return Raw sales data.
+	 */
+	public ReportData generateSalesReport(String date, int dateRange) {
+		ReportData data = new ReportData();
+		Integer id;
+		Integer quant;
+		Float price;
+		try {
+			String query = "select itemID, quantity, price from dOrder where purchaseDate > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and purchaseDate <= STR_TO_DATE(?, \"%Y-%m-%d\")";
+			PreparedStatement stmt = dbConnection.prepareStatement(query);
+			
+			stmt.setString(1, date);
+			stmt.setInt(2, dateRange);
+			stmt.setString(3, date);
+			ResultSet records = stmt.executeQuery();
+			
+			// Adds it all into the data object
+			while (records.next()){
+				id = records.getInt(1);
+				quant = records.getInt(2);
+				price = records.getFloat(3);
+				data.addItemQuantity(id, quant);
+				data.addItemPrice(id, price);
+			}
+			
+			return data;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+		
+		public ReportData generateStaleReport(String date, int range) {
+			ReportData data = new ReportData();
+			Integer id;
+			Integer quant;
+			try {
+				String query = "select id, quantity from inventory where expireTime > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
+				PreparedStatement stmt = dbConnection.prepareStatement(query);
+				stmt.setString(1, date);
+				stmt.setInt(2, range);
+				stmt.setString(3, date);
+				ResultSet records = stmt.executeQuery();
+				
+				// Adds it all into the data object
+				while (records.next()){
+					id = records.getInt(1);
+					quant = records.getInt(2);
+					data.addItemQuantity(id, quant);
+				}
+				
+				return data;
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return null;
+			}
+	}
 
 }
