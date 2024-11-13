@@ -95,4 +95,8 @@ public class ReportData {
 		}
 		return quantity;
 	}
+	
+	public Enumeration<Integer> getDonutIds() {
+		return this.dQuant.keys();
+	}
 }
