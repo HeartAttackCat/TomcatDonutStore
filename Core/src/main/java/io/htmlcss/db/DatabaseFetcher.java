@@ -191,7 +191,7 @@ public class DatabaseFetcher {
 	public boolean insertCart(Cart cart){
 		float totalPrice = 0;
 		int totalQuantity = 0;
-		int orderID = 0; // TODO fix this
+		int orderID = 0; 
 		int customerID = 0;
 
         SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -472,6 +472,28 @@ public class DatabaseFetcher {
 				e.printStackTrace();
 				return null;
 			}
+	}
+	
+	public boolean addBakingTray(Donut donut, int quantity) {
+        SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+        String date = str.format(new Date()); 
+		try {
+		    String sql = "INSERT INTO bakingDonuts (quantity, donutID, startBakingTime, endBakingTime) "
+		    		+ "VALUES (?, ?, ?, ADDTIME(?, '2:00'))";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+			stmt.setInt(1, quantity);
+			stmt.setInt(2, donut.getId());
+			stmt.setString(3, date);
+			stmt.setString(4, date);
+			
+			stmt.executeUpdate();
+			return true; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false; // failure
 	}
 
 }
