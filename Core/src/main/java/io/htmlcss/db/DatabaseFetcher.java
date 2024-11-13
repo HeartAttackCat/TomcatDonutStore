@@ -495,5 +495,32 @@ public class DatabaseFetcher {
 		}
 		return false; // failure
 	}
+	
+	/**
+	 * TODO Update to use wrapper.
+	 * @return
+	 */
+	public boolean convertTrayToInventory() {
+		try {
+			String query = " select * from bakingDonuts where endBakingTime < current_timestamp";
+			PreparedStatement stmt = dbConnection.prepareStatement(query);
+			ResultSet records = stmt.executeQuery();
+		    String sql = "insert into inventory (id, quantity, donutID, expireTime) VALUES (?, ?, ?, ?+2);)";
+			stmt = dbConnection.prepareStatement(sql);
+			while (records.next()){
+				// Get records and place into wrapper. Then load into sql our new stmt.
+				
+				stmt.executeUpdate();
+			}
+			
+			stmt.executeUpdate();
+			return true; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false; // failure
+		
+	}
 
 }
