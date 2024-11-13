@@ -61,7 +61,7 @@ public class ReportData {
 	 */
 	public int generateTotalQuantity() {
 		int quantity = 0;
-		Enumeration<Integer> keys = this.dPrice.keys(); 
+		Enumeration<Integer> keys = this.dQuant.keys(); 
 		
 		while(keys.hasMoreElements()) {
 			quantity += this.dQuant.get(keys.nextElement());
@@ -88,10 +88,10 @@ public class ReportData {
 	 * @param id
 	 * @return
 	 */
-	public float obtainItemQuantity(int id) {
-	    Float quantity = this.dPrice.get(id);
+	public int obtainItemQuantity(int id) {
+	    Integer quantity = this.dQuant.get(id);
 		if (quantity == null) {
-			return (float) -1;
+			return -1;
 		}
 		return quantity;
 	}
