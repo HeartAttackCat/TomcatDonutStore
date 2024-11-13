@@ -41,4 +41,17 @@ public class Cart {
     public List<Order> getItems(){
         return this.items;
     }
+    
+    /*
+     * Get the total cost of the Cart
+     */
+    public float getTotalCost() {
+    	float cost = 0;
+    	for(Order i: items) {
+    		Donut d = i.getItem();
+    		int q = i.getQuantity();
+    		cost += d.getPrice() * q;
+    	}
+    	return cost;
+    }
 }
