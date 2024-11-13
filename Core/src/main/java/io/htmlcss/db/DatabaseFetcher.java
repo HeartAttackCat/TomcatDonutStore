@@ -497,7 +497,7 @@ public class DatabaseFetcher {
 	}
 	
 	/**
-	 * TODO Update to use wrapper.
+	 * TODO: Update to use wrapper.
 	 * @return
 	 */
 	public boolean convertTrayToInventory() {
