@@ -474,53 +474,5 @@ public class DatabaseFetcher {
 			}
 	}
 	
-	public boolean addBakingTray(Donut donut, int quantity) {
-        SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-        String date = str.format(new Date()); 
-		try {
-		    String sql = "INSERT INTO bakingDonuts (quantity, donutID, startBakingTime, endBakingTime) "
-		    		+ "VALUES (?, ?, ?, ADDTIME(?, '2:00'))";
-			PreparedStatement stmt = dbConnection.prepareStatement(sql);
-			
-			stmt.setInt(1, quantity);
-			stmt.setInt(2, donut.getId());
-			stmt.setString(3, date);
-			stmt.setString(4, date);
-			
-			stmt.executeUpdate();
-			return true; // Success
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false; // failure
-	}
-	
-	/**
-	 * TODO Update to use wrapper.
-	 * @return
-	 */
-	public boolean convertTrayToInventory() {
-		try {
-			String query = " select * from bakingDonuts where endBakingTime < current_timestamp";
-			PreparedStatement stmt = dbConnection.prepareStatement(query);
-			ResultSet records = stmt.executeQuery();
-		    String sql = "insert into inventory (id, quantity, donutID, expireTime) VALUES (?, ?, ?, ?+2);)";
-			stmt = dbConnection.prepareStatement(sql);
-			while (records.next()){
-				// Get records and place into wrapper. Then load into sql our new stmt.
-				
-				stmt.executeUpdate();
-			}
-			
-			stmt.executeUpdate();
-			return true; // Success
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false; // failure
-		
-	}
 
 }
