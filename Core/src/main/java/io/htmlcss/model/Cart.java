@@ -30,7 +30,7 @@ public class Cart {
      * Constructor for cart object when first loaded in on front end.
      */
     public Cart(){
-        items = new ArrayList<Order>;
+        items = new ArrayList<Order>();
     }
 
     /**
