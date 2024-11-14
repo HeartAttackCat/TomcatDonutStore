@@ -39,31 +39,31 @@ public class Customer {
 
     }
 
-    public String getFirstName(){
+    public String getFirstName() {
         return this.firstName;
     }
     
-    public String getLastName(){
+    public String getLastName() {
         return this.lastName;
     }
 
-    public String getAddress(){
+    public String getAddress() {
         return this.address;
     }
 
-    public String getPhoneNumber(){
+    public String getPhoneNumber() {
         return this.phoneNumber;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return this.email;
     }
 
-    public int getZipCode(){
+    public int getZipCode() {
         return this.zipCode;
     }
     
-    public String getCardID(){
+    public String getCardID() {
         return this.cardID;
     }
 }
