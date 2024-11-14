@@ -99,7 +99,7 @@ public class DatabaseFetcher {
 	 */
 	public boolean checkDonut(int donutID) {
 		try {
-			String query = "SELECT * FROM donutfactory.donuts WHERE id = ?";
+			String query = "SELECT * FROM donuts WHERE id = ?";
 			PreparedStatement stmt = dbConnection.prepareStatement(query);
 			stmt.setInt(1, donutID);
 			ResultSet records = stmt.executeQuery();
@@ -120,12 +120,12 @@ public class DatabaseFetcher {
 	 */
 	public Donut getDonut(int donutID) {
 		try {
-			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM donutfactory.donuts WHERE id = ?");
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM donuts WHERE id = ?");
 			stmt.setInt(1, donutID);
 			ResultSet records = stmt.executeQuery();
 			
-			records.next();
-			return parseDonut(records);
+			if(records.next())
+				return parseDonut(records);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -142,7 +142,7 @@ public class DatabaseFetcher {
 		List<Donut> donuts = new ArrayList<Donut>();
 		try {
 			Statement stmt = dbConnection.createStatement();
-			ResultSet records = stmt.executeQuery("SELECT * FROM donutfactory.donuts");
+			ResultSet records = stmt.executeQuery("SELECT * FROM donuts");
 			
 			while(records.next())
 			{
@@ -261,7 +261,7 @@ public class DatabaseFetcher {
 	 */
 	private boolean insertCustomer(Customer customer){
 		try {
-		    String sql = "INSERT INTO donutFactory.customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		    String sql = "INSERT INTO customerInfo (firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			
 
@@ -291,7 +291,7 @@ public class DatabaseFetcher {
 	private int generateOrderID(String date){
 		int max = -1;
 		try {
-			PreparedStatement stmt = dbConnection.prepareStatement("SELECT MAX(orderID) FROM donutFactory.dOrder WHERE purchaseDate = ?");
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT MAX(orderID) FROM dOrder WHERE purchaseDate = ?");
 			stmt.setString(1, date);
 			ResultSet records = stmt.executeQuery();
 			while(records.next()) {
@@ -339,7 +339,7 @@ public class DatabaseFetcher {
 	 */
 	public boolean insertDonut(Donut donut) {
 		try {
-		    String sql = "INSERT INTO donutFactory.donuts (dType, flavor, price, donutDesc, img) VALUES (?, ?, ?, ?, ?)";
+		    String sql = "INSERT INTO donuts (dType, flavor, price, donutDesc, img) VALUES (?, ?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			
 			stmt.setString(1, donut.getType());
@@ -367,7 +367,7 @@ public class DatabaseFetcher {
 			if (!this.checkDonut(donut.getId())) {
 				return false;
 			}
-		    String sql = "Update donutFactory.donuts SET dType=?, flavor=?, price=?, donutDesc=?, img=? where id=?";
+		    String sql = "Update donuts SET dType=?, flavor=?, price=?, donutDesc=?, img=? where id=?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			
 			stmt.setString(1, donut.getType());
@@ -397,7 +397,7 @@ public class DatabaseFetcher {
 			if (!this.checkDonut(donut)) {
 				return false;
 			}
-		    String sql = "delete from donutFactory.donuts where id=?";
+		    String sql = "delete from donuts where id=?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, donut);
 			
@@ -410,7 +410,6 @@ public class DatabaseFetcher {
 		return false; // failure
 	
 	}
-	
 	
 	/**
 	 * Obtains data starting from a given date and until a certain range.
@@ -473,5 +472,4 @@ public class DatabaseFetcher {
 				return null;
 			}
 	}
-
 }

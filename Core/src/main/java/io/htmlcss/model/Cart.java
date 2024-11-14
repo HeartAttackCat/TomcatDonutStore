@@ -3,8 +3,8 @@
  * information.
  */
 package io.htmlcss.model;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Cart {
     private Customer buyer = null;
@@ -25,6 +25,13 @@ public class Cart {
         }
         this.buyer = buyer;
         this.items = items;
+    }
+
+    /**
+     * Constructor for cart object when first loaded in on front end.
+     */
+    public Cart(){
+        items = new ArrayList<Order>();
     }
 
     /**
@@ -54,5 +61,48 @@ public class Cart {
     		cost += d.getPrice() * q;
     	}
     	return cost;
+    }
+
+    /*
+     * Add a donut to the cart
+     * @param donutID ID of the donut to add
+     * @param quantity Quantity of the donut to add
+     */
+    public boolean addDonuts(int donutID, int quantity) throws IllegalArgumentException {
+    	for(Order i: items) {
+    		if(i.getItem().getId() == donutID) {
+                int q = i.getQuantity() + quantity;
+    			if (q <= 0) {
+                    // This is a removal
+    				items.remove(i);
+    			} else {
+    				i.setQuantity(q);
+    			}
+    			return true;
+    		}
+    	}
+
+        // Donut not found in cart, add new order
+        Donut d = Donut.getDonut(donutID);
+        if(d == null) {
+        	return false;
+        }
+        items.add(new Order(d, quantity));
+    	return true;
+    }
+
+    /**
+     * Remove a donut from the cart
+     * @param donutID ID of the donut to remove
+     */
+    public boolean removeDonuts(int donutID, int quantity) {
+        return addDonuts(donutID, quantity * -1);
+    }
+
+    /**
+     * Sets the customer.
+     */
+    public void setCustomer(Customer customer){
+        this.buyer = customer;
     }
 }

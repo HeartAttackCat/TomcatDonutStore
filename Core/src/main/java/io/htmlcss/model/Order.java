@@ -12,7 +12,7 @@ public class Order {
      * @param item Donut object
      * @param quantity Quantity of donuts
      */
-    public Order(Donut item, int quantity){
+    public Order(Donut item, int quantity) throws IllegalArgumentException {
         if (item == null) {
             throw new IllegalArgumentException("Item cannot be null");
         }
@@ -37,5 +37,16 @@ public class Order {
      */
     public int getQuantity(){
         return this.quantity;
+    }
+
+    /**
+     * Set the quantity of donuts
+     * @param quantity Quantity of donuts
+     */
+    public void setQuantity(int quantity) throws IllegalArgumentException {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
+        this.quantity = quantity;
     }
 }
