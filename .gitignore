@@ -2,3 +2,4 @@
 /Servers/
 Core/src/main/webapp/WEB-INF/dbenv
 .DS_Store
+Core/build
