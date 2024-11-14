@@ -1,12 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
-<%@ page import="java.util.List,io.htmlcss.model.Donut,io.htmlcss.db.DatabaseFetcher,io.htmlcss.db.DBFactory"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List, io.htmlcss.model.Donut, io.htmlcss.model.Cart, io.htmlcss.model.Order"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Donut Factory</title>
-        <meta name="description" content="Order donuts from Grill's Donut Factory.">
+        <title>Donut Factory - Cart</title>
+        <meta name="description" content="Your shopping cart at Grill's Donut Factory.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
             /* Reset and base styles */
@@ -145,32 +145,28 @@
         <!-- Header with Title Image and Cart Icon -->
         <div class="header">
             <img decoding="async" class="title" src="./images/logo.png" alt="Donut Factory Title">
-            <a href="Cart">
-                <img src="./images/shopping-cart.svg" alt="Cart Icon" class="cart-icon">
-            </a>
         </div>
 
-        <!-- Outer container for content -->
+        <!-- Outer container for cart content -->
         <div class="outer">
-            <div class="wrapper" id="content">
-                <%! DatabaseFetcher db = DBFactory.getDatabaseFetcher(); %>
+            <div class="wrapper" id="cart-content">
+                <h2>Your Cart</h2>
                 <%
-                List<Donut> donuts = db.getMenu();
-                for (Donut donut : donuts) {
+                Cart cart = (Cart) session.getAttribute("cart");
+        		List<Order> cartItems = cart.getItems();
+                
+                double total = cart.getTotalCost();
+                for (Order order : cartItems) {
                     %>
-                    <!-- Individual donut container styled with purple theme -->
                     <div class="donut">
-                        <h3><%= donut.getType() %></h3>
-                        <h4><%= donut.getFlavor() %> - $ <%= donut.getPrice() %></h4>
-
-                        <!-- Button for product details redirection -->
-                        <button onclick="window.location.href='product?product=<%= donut.getId() %>'">
-                            View Details
-                        </button>
+                        <h3><%= order.getItem().getType() %> - <%= order.getItem().getFlavor() %>  </h3>
+                        <h4><%= order.getQuantity()%> - $ <%= String.format("%.2f", order.getItem().getPrice() * order.getQuantity()) %></h4>
                     </div>
                     <%
                 }
-                %>
+                    %>
+                    <h3>Total: $<%= String.format("%.2f", total) %></h3>
+                    <button onclick="window.location.href='checkout.jsp'">Proceed to Checkout</button>
             </div>
         </div>
     </body>
