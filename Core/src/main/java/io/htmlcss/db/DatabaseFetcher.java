@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.text.ParseException; 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date; 
@@ -577,7 +579,7 @@ public class DatabaseFetcher {
 				InventoryTray tray = parseInventoryTray(records);
 				trays.add(tray);
 			}
-			
+
 			records = stmt.executeQuery("SELECT * FROM bakingDonuts");
 			
 			while(records.next())
@@ -585,7 +587,6 @@ public class DatabaseFetcher {
 				BakingTray tray = parseBakingTray(records);
 				trays.add(tray);
 			}
-			
 			return trays;
 			
 		} catch (SQLException e) {
@@ -595,19 +596,25 @@ public class DatabaseFetcher {
 	}
 
 	private InventoryTray parseInventoryTray(ResultSet record) throws SQLException {
-		int donutID = record.getInt(1);
+		// TODO: Get tray id
+		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);
-		Date expireTime = record.getDate(3);
-		InventoryTray tray = new InventoryTray(donutID, quantity, expireTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		Date expireTime = record.getDate(4);
+		String time = expireTime.toString();
+//		System.out.println(time);
+		LocalDateTime bigT = LocalDateTime.parse(time + "T00:00:00");
+		InventoryTray tray = new InventoryTray(donutID, quantity, bigT);
 		return tray;
 	}
 
 	private BakingTray parseBakingTray(ResultSet record) throws SQLException {
-		int donutID = record.getInt(1);
+		// TODO: Get tray id
+		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);
-		Date startBakingTime = record.getDate(3);
-		Date endBakingTime = record.getDate(4); // We don't need this, it is calculated in the constructor.
-		BakingTray tray = new BakingTray(donutID, quantity, startBakingTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		Date startBakingTime = record.getDate(4);
+		Date endBakingTime = record.getDate(5); // We don't need this, it is calculated in the constructor.
+		LocalDateTime bigT = LocalDateTime.parse(startBakingTime.toString() + "T00:00:00");
+		BakingTray tray = new BakingTray(donutID, quantity, bigT);
 		return tray;
 	}
 }

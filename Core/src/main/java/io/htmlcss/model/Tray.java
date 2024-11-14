@@ -34,6 +34,7 @@ public abstract class Tray {
             db = DBFactory.getDatabaseFetcher();
         }
         if (trays == null) {
+        	trays = new ArrayList<Tray>(); // Prevent infinite loop by temporarily setting trays
             trays = db.getListOfTrays();
         }
     }
