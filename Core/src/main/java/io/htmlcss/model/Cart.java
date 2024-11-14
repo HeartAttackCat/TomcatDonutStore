@@ -27,6 +27,13 @@ public class Cart {
     }
 
     /**
+     * Constructor for cart object when first loaded in on front end.
+     */
+    public Cart(){
+        items = new ArrayList<Order>;
+    }
+
+    /**
      * Get the buyer of the cart
      * @return Customer object
      */
@@ -89,5 +96,12 @@ public class Cart {
      */
     public boolean removeDonuts(int donutID, int quantity) {
         return addDonuts(donutID, quantity * -1);
+    }
+
+    /**
+     * Sets the customer.
+     */
+    public void setCustomer(Customer customer){
+        this.buyer = customer;
     }
 }
