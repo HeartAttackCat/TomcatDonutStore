@@ -419,7 +419,7 @@ public class DatabaseFetcher {
 	 * @return Raw sales data.
 	 */
 	public ReportData generateSalesReport(String date, int dateRange) {
-		ReportData data = new ReportData();
+		ReportData data = new ReportDataSales();
 		Integer id;
 		Integer quant;
 		Float price;
@@ -497,7 +497,7 @@ public class DatabaseFetcher {
 	}
 	
 	/**
-	 * TODO: Update to use wrapper.
+	 * TODO Update to use wrapper.
 	 * @return
 	 */
 	public boolean convertTrayToInventory() {
