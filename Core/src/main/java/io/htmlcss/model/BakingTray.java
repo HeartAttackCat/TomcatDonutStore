@@ -11,14 +11,14 @@ public class BakingTray extends Tray {
 
     public BakingTray(Donut d, int quantity, LocalDateTime startBakingTime) {
         // End baking time is 20 minutes after start baking time
-        super(d.getId(), quantity);
-        endBakingTime = startBakingTime.plusMinutes(20);
+        this(d.getId(), quantity, startBakingTime);
     }
 
     public BakingTray(int donutID, int quantity, LocalDateTime startBakingTime) {
         // End baking time is 20 minutes after start baking time
         super(donutID, quantity);
-        endBakingTime = startBakingTime.plusHours(20);
+        this.startBakingTime = startBakingTime;
+        endBakingTime = startBakingTime.plusMinutes(20);
     }
 
     public LocalDateTime getStartBakingTime() {

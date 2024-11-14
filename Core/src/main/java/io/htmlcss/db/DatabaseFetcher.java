@@ -14,7 +14,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.text.ParseException; 
-import java.text.SimpleDateFormat; 
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date; 
 import io.htmlcss.model.*;
 
@@ -471,5 +473,141 @@ public class DatabaseFetcher {
 				e.printStackTrace();
 				return null;
 			}
+	}
+
+	public boolean insertTray(Tray t) {
+		// Tray can either be a BakingTray or an InventoryTray
+		if (t instanceof BakingTray) {
+			return insertBakingTray((BakingTray) t);
+		} else if (t instanceof InventoryTray) {
+			return insertInventoryTray((InventoryTray) t);
+		} else {
+			return false;
+		}
+	}
+
+	private boolean insertBakingTray(BakingTray t) {
+		try {
+			String sql = "INSERT INTO bakingDonuts (donutID, quantity, startBakingTime, endBakingTime) VALUES (?, ?, ?, ?)";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, t.getDonutID());
+			stmt.setInt(2, t.getQuantity());
+
+			// Convert dates to ms since epoch
+			long startBakingTime = t.getStartBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			long endBakingTime = t.getEndBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			
+			stmt.setDate(3, new java.sql.Date(startBakingTime));
+			stmt.setDate(4, new java.sql.Date(endBakingTime));
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean insertInventoryTray(InventoryTray t) {
+		try {
+			String sql = "INSERT INTO inventory (donutID, quantity, expireTime) VALUES (?, ?, ?)";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, t.getDonutID());
+			stmt.setInt(2, t.getQuantity());
+			
+			// Convert date to ms since epoch
+			long expireTime = t.getExpirationDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			
+			stmt.setDate(3, new java.sql.Date(expireTime));
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public boolean deleteTray(Tray t) {
+		if (t instanceof BakingTray) {
+			return deleteBakingTray((BakingTray) t);
+		} else if (t instanceof InventoryTray) {
+			return deleteInventoryTray((InventoryTray) t);
+		} else {
+			return false;
+		}
+	}
+
+	private boolean deleteBakingTray(BakingTray t) {
+		try {
+			String sql = "DELETE FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, t.getDonutID());
+			long startBakingTime = t.getStartBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			stmt.setDate(2, new java.sql.Date(startBakingTime));
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean deleteInventoryTray(InventoryTray t) {
+		try {
+			String sql = "DELETE FROM inventory WHERE donutID = ? AND expireTime = ?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, t.getDonutID());
+			long expireTime = t.getExpirationDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			stmt.setDate(2, new java.sql.Date(expireTime));
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public List<Tray> getListOfTrays() {
+		List<Tray> trays = new ArrayList<>();
+		try {
+			Statement stmt = dbConnection.createStatement();
+			ResultSet records = stmt.executeQuery("SELECT * FROM inventory");
+			
+			while(records.next())
+			{
+				InventoryTray tray = parseInventoryTray(records);
+				trays.add(tray);
+			}
+			
+			records = stmt.executeQuery("SELECT * FROM bakingDonuts");
+			
+			while(records.next())
+			{
+				BakingTray tray = parseBakingTray(records);
+				trays.add(tray);
+			}
+			
+			return trays;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return trays;
+	}
+
+	private InventoryTray parseInventoryTray(ResultSet record) throws SQLException {
+		int donutID = record.getInt(1);
+		int quantity = record.getInt(2);
+		Date expireTime = record.getDate(3);
+		InventoryTray tray = new InventoryTray(donutID, quantity, expireTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		return tray;
+	}
+
+	private BakingTray parseBakingTray(ResultSet record) throws SQLException {
+		int donutID = record.getInt(1);
+		int quantity = record.getInt(2);
+		Date startBakingTime = record.getDate(3);
+		Date endBakingTime = record.getDate(4); // We don't need this, it is calculated in the constructor.
+		BakingTray tray = new BakingTray(donutID, quantity, startBakingTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+		return tray;
 	}
 }
