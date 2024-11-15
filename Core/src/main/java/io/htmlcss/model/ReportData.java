@@ -28,8 +28,6 @@ public class ReportData {
 		}
 	}
 	
-	
-	
 	/**
 	 * Obtains the total amount of items that have been sold.
 	 * @return
