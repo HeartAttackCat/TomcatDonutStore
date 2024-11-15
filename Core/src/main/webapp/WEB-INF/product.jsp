@@ -133,10 +133,9 @@
 		</style>
 	</head>
 	<body>
-		<%! io.htmlcss.db.DatabaseFetcher db = io.htmlcss.db.DBFactory.getDatabaseFetcher(); %>
 		<%! io.htmlcss.model.Donut donut; %>
 		<%
-		donut = db.getDonut(Integer.parseInt(request.getParameter("product")));
+		donut = Donut.getDonut(Integer.parseInt(request.getParameter("product")));
 		%>
 		
 		<!-- Main Container -->

@@ -6,6 +6,8 @@ package io.htmlcss.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.htmlcss.db.DBFactory;
+
 public class Cart {
     private Customer buyer = null;
     private List<Order> items;
@@ -104,5 +106,13 @@ public class Cart {
      */
     public void setCustomer(Customer customer){
         this.buyer = customer;
+    }
+
+    public static boolean addCartToDB(Cart c) {
+        return DBFactory.getDatabaseFetcher().insertCart(c);
+    }
+
+    public static boolean placeOrder(Cart c) {
+        return addCartToDB(c);
     }
 }

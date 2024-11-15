@@ -1,5 +1,6 @@
 package io.htmlcss.model;
 
+import java.util.List;
 import io.htmlcss.db.DBFactory;
 import io.htmlcss.db.DatabaseFetcher;
 
@@ -142,5 +143,14 @@ public class Donut {
 	public static Donut getDonut(int donutID) {
 		DatabaseFetcher db = DBFactory.getDatabaseFetcher();
 		return db.getDonut(donutID);
+	}
+
+	public static List<Donut> getDonuts() {
+		DatabaseFetcher db = DBFactory.getDatabaseFetcher();
+		return db.getMenu();
+	}
+
+	public static List<Donut> getMenu() {
+		return getDonuts();
 	}
 }

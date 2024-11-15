@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
-<%@ page import="java.util.List,io.htmlcss.model.Donut,io.htmlcss.db.DatabaseFetcher,io.htmlcss.db.DBFactory"%>
+<%@ page import="java.util.List,io.htmlcss.model.Donut"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -170,9 +170,8 @@
         <!-- Outer container for content -->
         <div class="outer">
             <div class="wrapper" id="content">
-                <%! DatabaseFetcher db = DBFactory.getDatabaseFetcher(); %>
                 <%
-                List<Donut> donuts = db.getMenu();
+                List<Donut> donuts = Donut.getMenu();
                 for (Donut donut : donuts) {
                     %>
                     <!-- Individual donut container styled with purple theme -->
