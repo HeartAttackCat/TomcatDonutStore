@@ -59,6 +59,21 @@
             .cart-icon:hover {
                 transform: scale(1.1); /* Slight zoom effect on hover */
             }
+            
+            /* home Icon Styling */
+            .home-icon {
+                position: absolute;
+                top: 10px; /* Adjusted for vertical alignment */
+                right: 20px; /* Adjusted to move it closer to the right side */
+                width: 60px;
+                height: 60px;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+
+            .home-icon:hover {
+                transform: scale(1.1); /* Slight zoom effect on hover */
+            }
 
             /* Outer container to hold all content */
             .outer {
@@ -176,6 +191,24 @@
             .donut:hover {
                 transform: translateY(-10px);
             }
+            
+            .donut button2{
+                background-color: #F2E6FF ;
+                color: #6F0081;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .donut button2:hover {
+                background-color: #57006A;
+            }
+            
 
             /* Responsive adjustments */
             @media (max-width: 768px) {
@@ -193,30 +226,50 @@
         <!-- Header with Title Image and Cart Icon -->
         <div class="header">
             <img decoding="async" class="title" src="./images/logo.png" alt="Donut Factory Title">
+            <a href="home">
+                <img src="./images/home-icon-white-11.png" alt="Home Icon" class="home-icon">
+            </a>
         </div>
 
         <!-- Outer container for cart content -->
         <div class="outer">
-            <div class="wrapper" id="cart-content">
-                <h2>Your Cart</h2>
-                <%
+            <div class="wrapper" id="cart-content">            
+            	<%
                 Cart cart = (Cart) session.getAttribute("cart");
         		List<Order> cartItems = cart.getItems();
                 
                 double total = cart.getTotalCost();
+                %>
+            	
+                <h2>Your Cart</h2>
+                
+                <div class="checkout">
+	            	<h3>Total: $<%= String.format("%.2f", total) %></h3>
+	                <button onclick="window.location.href='checkout.jsp'">Proceed to Checkout</button>
+                </div>
+                
+                <%
                 for (Order order : cartItems) {
                     %>
                     <div class="donut">
                         <h3><%= order.getItem().getType() %> - <%= order.getItem().getFlavor() %>  </h3>
                         <h4><%= order.getQuantity()%> - $ <%= String.format("%.2f", order.getItem().getPrice() * order.getQuantity()) %></h4>
+                        
+                        <center>	                        
+	                        <button2 onclick="window.location.href='Cart?command=add&did=<%= order.getItem().getId()%>&quantity=1' " >
+	                        	Add 1
+	                        </button2>
+	                        
+	                        <button2 onclick="window.location.href='Cart?command=remove&did=<%= order.getItem().getId()%>&quantity=1' " >
+	                        	Remove 1
+	                        </button2>                       
+                        </center>
+                        
+                        
                     </div>
                     <%
                 }
                     %>
-                    <div class="checkout">
-	                    <h3>Total: $<%= String.format("%.2f", total) %></h3>
-	                    <button onclick="window.location.href='checkout.jsp'">Proceed to Checkout</button>
-                    </div>
                     
             </div>
         </div>
