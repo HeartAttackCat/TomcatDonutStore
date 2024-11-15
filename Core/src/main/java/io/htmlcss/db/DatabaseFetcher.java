@@ -8,19 +8,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.text.ParseException; 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date; 
-import io.htmlcss.model.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import io.htmlcss.model.BakingTray;
+import io.htmlcss.model.Cart;
+import io.htmlcss.model.Customer;
+import io.htmlcss.model.Donut;
+import io.htmlcss.model.InventoryTray;
+import io.htmlcss.model.Order;
+import io.htmlcss.model.ReportData;
+import io.htmlcss.model.ReportDataSales;
+import io.htmlcss.model.Tray;
 
 
 public class DatabaseFetcher {
@@ -431,7 +436,7 @@ public class DatabaseFetcher {
 		Integer quant;
 		Float price;
 		try {
-			String query = "select itemID, quantity, price from dOrder where purchaseDate > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and purchaseDate <= STR_TO_DATE(?, \"%Y-%m-%d\")";
+			String query = "select itemID, quantity, price from dOrder where purchaseDate > Date_sub(?, INTERVAL ? DAY) and purchaseDate <= STR_TO_DATE(?, \"%Y-%m-%d\")";
 			PreparedStatement stmt = dbConnection.prepareStatement(query);
 			
 			stmt.setString(1, date);
@@ -460,7 +465,7 @@ public class DatabaseFetcher {
 			Integer id;
 			Integer quant;
 			try {
-				String query = "select id, quantity from inventory where expireTime > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
+				String query = "select id, quantity from inventory where expireTime > Date_sub(?, INTERVAL ? DAY) and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
 				PreparedStatement stmt = dbConnection.prepareStatement(query);
 				stmt.setString(1, date);
 				stmt.setInt(2, range);
@@ -673,6 +678,7 @@ public class DatabaseFetcher {
 		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);
 		Date startBakingTime = record.getDate(4);
+		@SuppressWarnings("unused")
 		Date endBakingTime = record.getDate(5); // We don't need this, it is calculated in the constructor.
 		LocalDateTime bigT = LocalDateTime.parse(startBakingTime.toString() + "T00:00:00");
 		BakingTray tray = new BakingTray(trayID, donutID, quantity, bigT);
