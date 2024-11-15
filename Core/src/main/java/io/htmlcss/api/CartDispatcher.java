@@ -57,7 +57,7 @@ public class CartDispatcher extends HttpServlet {
 		if (cart == null)
 		{
 			//TODO remove following once empty cart page is implemented.
-			response.getWriter().append("EMPTY CART, :(");
+			request.getRequestDispatcher("/WEB-INF/empty.jsp").forward(request, response);
 			//TODO implement empty cart page.
 			return;
 		}
