@@ -199,4 +199,59 @@ public abstract class Tray {
     public int getTrayID() {
         return this.trayID;
     }
+
+    /**
+     * Take donuts out of the inventory.
+     * @param donutID The ID of the donut to take out
+     * @param quantity The number of donuts to take out
+     * @return The number of donuts taken out, or -1 if there are not enough donuts in the inventory
+     */
+    public static int takeDonutsFromInventory(int donutID, int quantity) {
+        int taken = 0;
+        int q_needed = quantity;
+
+        int q_total = 0;
+        // Check if there are enough donuts in the inventory
+        for (Tray t : getInventoryTrays()) {
+            if (t.getDonutID() == donutID) {
+                q_total += t.getQuantity();
+            }
+        }
+
+        if (q_total < q_needed) {
+            return -1;
+        }
+
+        // The logical pass-thru
+        for (Tray t : getInventoryTrays()) {
+            if (t.getDonutID() == donutID) {
+                int q = t.getQuantity();
+                if (q > q_needed) {
+                    t.quantity -= q_needed;
+                    taken += q_needed;
+                    q_needed = 0;
+                    db.updateTray(t);
+                } else {
+                    taken += q;
+                    q_needed -= q;
+                    t.quantity = 0;
+                    db.deleteTray(t);
+                }
+                if (quantity == 0) {
+                    break;
+                }
+            }
+        }
+        return taken;
+    }
+
+    /**
+     * Take donuts out of the inventory.
+     * @param d The type of the donut to take out
+     * @param quantity The number of donuts to take out
+     * @return The number of donuts taken out, or -1 if there are not enough donuts in the inventory
+     */
+    public static int takeDonutsFromInventory(Donut d, int quantity) {
+        return takeDonutsFromInventory(d.getId(), quantity);
+    }
 }
