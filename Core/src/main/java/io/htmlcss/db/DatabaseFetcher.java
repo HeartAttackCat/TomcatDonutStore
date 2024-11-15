@@ -744,7 +744,7 @@ public class DatabaseFetcher {
 			if(!this.doesCartExist(uniqueCarts, i)) {
 				orders = new ArrayList<Order>();
 				for(Cart j : carts) {
-					// Check if they're the same order ID and date and them merge.
+					// Check if they're the same order ID and date and then merge.
 					if (this.isSameOrder(j, i)) {
 						orders = this.addOrders(orders, i);
 					}
@@ -786,7 +786,7 @@ public class DatabaseFetcher {
 	 */
 	private boolean doesCartExist(ArrayList<Cart> carts, Cart target) {
 		for(Cart i: carts) {
-			if(i.getOrderID() == target.getOrderID() && target.getDate().equals(i.getDate())) {
+			if(isSameOrder(i, target)) {
 				return true;
 			}
 		}
