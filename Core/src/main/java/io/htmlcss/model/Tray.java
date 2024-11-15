@@ -13,22 +13,30 @@ import java.util.ArrayList;
 public abstract class Tray {
     private static DatabaseFetcher db = null;  // Database fetcher object
     private static List<Tray> trays = null;  // List of all trays in the system
-    protected String trayID;  // Unique identifier for the tray
+    protected int trayID;  // Unique identifier for the tray
     protected int donutID;    // ID of the donut type on the tray
     protected int quantity;   // Number of donuts on the tray
 
 
     // Constructor implementation
-    public Tray(int donutID, int quantity) {
+    protected Tray(int trayID, int donutID, int quantity) {
+        this.trayID = trayID;
         this.donutID = donutID;
         this.quantity = quantity;
         addTray(this); // Whenever a tray is added (whether it is Baking or Inventory), add it to the list of trays
     }
 
-    public Tray(Donut d, int quantity) {
-        this(d.getId(), quantity);
+    protected Tray(int trayid, Donut d, int quantity) {
+        this(trayid, d.getId(), quantity);
     }
 
+    protected Tray(Tray t) {
+        this(t.getTrayID(), t.getDonutID(), t.getQuantity());
+    }
+
+    /**
+     * Prefetch the list of trays from the database.
+     */
     private static void prefetchTrays() {
         if(db == null) {
             db = DBFactory.getDatabaseFetcher();
@@ -39,6 +47,9 @@ public abstract class Tray {
         }
     }
 
+    /**
+     * Add a tray to the list of trays. (Called by Tray constructor to self-append)
+     */
     protected static void addTray(Tray tray) {
         prefetchTrays();
         trays.add(tray);
@@ -168,7 +179,7 @@ public abstract class Tray {
     /**
      * Get the unique identifier for the tray.
      */
-    public String getTrayID() {
+    public int getTrayID() {
         return this.trayID;
     }
 }

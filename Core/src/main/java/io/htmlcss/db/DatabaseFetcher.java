@@ -597,24 +597,26 @@ public class DatabaseFetcher {
 
 	private InventoryTray parseInventoryTray(ResultSet record) throws SQLException {
 		// TODO: Get tray id
+		int trayID = record.getInt(1);
 		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);
 		Date expireTime = record.getDate(4);
 		String time = expireTime.toString();
 //		System.out.println(time);
 		LocalDateTime bigT = LocalDateTime.parse(time + "T00:00:00");
-		InventoryTray tray = new InventoryTray(donutID, quantity, bigT);
+		InventoryTray tray = new InventoryTray(trayID, donutID, quantity, bigT);
 		return tray;
 	}
 
 	private BakingTray parseBakingTray(ResultSet record) throws SQLException {
 		// TODO: Get tray id
+		int trayID = record.getInt(1);
 		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);
 		Date startBakingTime = record.getDate(4);
 		Date endBakingTime = record.getDate(5); // We don't need this, it is calculated in the constructor.
 		LocalDateTime bigT = LocalDateTime.parse(startBakingTime.toString() + "T00:00:00");
-		BakingTray tray = new BakingTray(donutID, quantity, bigT);
+		BakingTray tray = new BakingTray(trayID, donutID, quantity, bigT);
 		return tray;
 	}
 }

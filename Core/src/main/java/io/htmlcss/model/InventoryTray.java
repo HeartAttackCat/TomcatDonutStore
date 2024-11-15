@@ -18,8 +18,8 @@ public class InventoryTray extends Tray {
      * @param quantity
      * @param expirationDate
      */
-    public InventoryTray(int donutID, int quantity, LocalDateTime expirationDate) {
-        super(donutID, quantity);
+    public InventoryTray(int trayId, int donutID, int quantity, LocalDateTime expirationDate) {
+        super(trayId, donutID, quantity);
         this.expirationDate = expirationDate;
     }
 
@@ -28,10 +28,11 @@ public class InventoryTray extends Tray {
      * @param bakingTray
      */
     public InventoryTray(BakingTray bakingTray) {
+        super(bakingTray);
         // We make a new InventoryTray from a BakingTray that has finished baking
         
         // Expire 3 days after the end of baking
-        this(bakingTray.getDonutID(), bakingTray.getQuantity(), bakingTray.getEndBakingTime().plusDays(3));
+        this.expirationDate = bakingTray.getEndBakingTime().plusDays(3);
     }
 
     /**

@@ -1,6 +1,8 @@
 package io.htmlcss.model;
 import java.time.LocalDateTime;
 
+import io.htmlcss.db.DBFactory;
+
 /**
  * This object is a model object for passing or storing a baking tray object.
  * The database will return this model.
@@ -16,9 +18,15 @@ public class BakingTray extends Tray {
 
     public BakingTray(int donutID, int quantity, LocalDateTime startBakingTime) {
         // End baking time is 20 minutes after start baking time
-        super(donutID, quantity);
+        super(DBFactory.getDatabaseFetcher().getTrayID(), donutID, quantity);
         this.startBakingTime = startBakingTime;
         endBakingTime = startBakingTime.plusMinutes(20);
+    }
+
+    public BakingTray(int trayId, int donutID, int quantity, LocalDateTime startBakingTime) {
+        // End baking time is 20 minutes after start baking time
+        this(donutID, quantity, startBakingTime);
+        this.trayID = trayId;
     }
 
     public LocalDateTime getStartBakingTime() {
