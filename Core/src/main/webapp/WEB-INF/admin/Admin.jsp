@@ -16,7 +16,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
+            flex-direction: row;
+            gap: 10px;
         }
 
         /* Container for centering and styling the panel */
@@ -122,18 +123,47 @@
 
     <!-- Admin Container -->
     <div class="admin-container">
-        <h1>Welcome Administrator</h1>
+        <h1>Generate Waste Report </h1>
 
         <!-- Date Field -->
         <div class="form-group">
-            <label for="reportDate">Select Date:</label>
-            <input type="date" id="reportDate" name="reportDate" required>
+            <label for="reportDate">Select End Date:</label>
+           	<form method="get" action = "./admin?command=waste">
+           		<input type="hidden" value="waste" name="command">
+           		<label>Year - </label>
+           		<input type="number" name="yr"><br>
+           		<label>Month - </label>
+           		<input type="number" name="mth"><br>
+           		<label>Day - </label>
+           		<input type="number" name="dy"><br>
+           		<br>
+           		<label for="reportDate">Range:</label><br>
+           		<label>Days - </label>
+           		<input type="number" name="bc"><br><br>
+           		<button type="submit" >Generate Sales Donut Report</button>
+           	</form>
         </div>
+    </div>
+    <div class="admin-container">
+        <h1>Generate Sales Report </h1>
 
-        <!-- Generate Report Buttons -->
-        <div class="admin-links">
-            <button type="button" onclick="/Admin/sales">Generate Sales Donut Report</button>
-            <button type="button" onclick="/Admin/stales">Generate Stale Donut Report</button>
+        <!-- Date Field -->
+        <div class="form-group">
+            <label for="reportDate">Select End Date:</label>
+           	<form method="get" action = "./admin?command=waste">
+           		<input type="hidden" value="sales" name="command">
+           		<label>Year - </label>
+           		<input type="number" name="yr"><br>
+           		<label>Month - </label>
+           		<input type="number" name="mth"><br>
+           		<label>Day - </label>
+           		<input type="number" name="dy"><br>
+           		<br>
+           		<label for="reportDate">Range:</label><br>
+           		<label>Days - </label>
+           		<input type="number" name="bc"><br><br>
+           		<button type="submit" >Generate Sales Donut Report</button>
+           	</form>
         </div>
     </div>
 </body>
