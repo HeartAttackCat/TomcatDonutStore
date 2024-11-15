@@ -149,9 +149,10 @@ public class Cart {
     /**
      * sets itself as complete and updates the database 
      */
-    public void setComplete() {
-    	DBFactory.getDatabaseFetcher().updateOrder(this.date, this.cartID);
-    	this.status = true;
+    public boolean setComplete() {
+    	
+    	this.status = DBFactory.getDatabaseFetcher().updateOrder(this.date, this.cartID);
+        return this.status;
     }
     
     public int getOrderID() {
