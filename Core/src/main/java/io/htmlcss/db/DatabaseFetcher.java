@@ -360,6 +360,10 @@ public class DatabaseFetcher {
 		}
 		return false; // failure
 	}
+
+	public boolean updateDonut(Donut d) {
+		return modifyDonut(d);
+	}
 	
 	/**
 	 * Modifies a donut in the database.
