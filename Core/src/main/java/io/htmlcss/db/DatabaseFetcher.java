@@ -421,8 +421,8 @@ public class DatabaseFetcher {
 	 * @param range The number of days back we wish to go.
 	 * @return Raw sales data.
 	 */
-	public ReportData generateSalesReport(String date, int dateRange) {
-		ReportData data = new ReportDataSales();
+	public ReportDataSales generateSalesReport(String date, int dateRange) {
+		ReportDataSales data = new ReportDataSales();
 		Integer id;
 		Integer quant;
 		Float price;
