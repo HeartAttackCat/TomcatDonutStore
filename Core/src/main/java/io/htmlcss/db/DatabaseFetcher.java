@@ -124,8 +124,8 @@ public class DatabaseFetcher {
 			stmt.setInt(1, donutID);
 			ResultSet records = stmt.executeQuery();
 			
-			records.next();
-			return parseDonut(records);
+			if(records.next())
+				return parseDonut(records);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -411,7 +411,6 @@ public class DatabaseFetcher {
 	
 	}
 	
-	
 	/**
 	 * Obtains data starting from a given date and until a certain range.
 	 * @param date Our starting date.
@@ -473,6 +472,4 @@ public class DatabaseFetcher {
 				return null;
 			}
 	}
-	
-
 }
