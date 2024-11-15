@@ -73,6 +73,23 @@ public abstract class Tray {
     }
 
     /**
+     * Get a list of trays that have finished baking.
+     */
+    public static List<Tray> getBakedTrays() {
+        prefetchTrays();
+        List<Tray> bakedTrays = new ArrayList<>();
+
+        // Check each tray in the list to see if it is an InventoryTray
+        for (Tray tray : trays) {
+            if (tray instanceof BakingTray && ((BakingTray) tray).isDoneBaking()) {
+                bakedTrays.add(tray);
+            }
+        }
+
+        return bakedTrays;
+    }
+
+    /**
      * Get a list of trays that are in the current inventory AND not stale.
      */
     public static List<Tray> getInventoryTrays() {
