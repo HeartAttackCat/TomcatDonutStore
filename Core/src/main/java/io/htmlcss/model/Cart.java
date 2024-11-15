@@ -108,10 +108,25 @@ public class Cart {
         this.buyer = customer;
     }
 
+    /**
+     * Add the cart to the database. (Effectively placing the order)
+     */
+    public boolean addCartToDB() {
+        return Cart.addCartToDB(this);
+    }
+
+    /**
+     * Add a cart to the database. (Effectively placing the order)
+     * @param c Cart object to add to the database
+     */
     public static boolean addCartToDB(Cart c) {
         return DBFactory.getDatabaseFetcher().insertCart(c);
     }
 
+    /**
+     * Add a cart to the database. (Effectively placing the order)
+     * @param c Cart object to add to the database
+     */
     public static boolean placeOrder(Cart c) {
         return addCartToDB(c);
     }
