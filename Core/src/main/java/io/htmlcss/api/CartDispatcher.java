@@ -1,10 +1,8 @@
 package io.htmlcss.api;
 
 import java.io.IOException;
-import java.util.List;
 
 import io.htmlcss.model.Cart;
-import io.htmlcss.model.Order;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
