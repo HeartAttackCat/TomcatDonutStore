@@ -228,6 +228,7 @@ public abstract class Tray {
      */
     public static boolean hasEnoughDonutsInInventory(Donut d, int quantity) {
         return hasEnoughDonutsInInventory(d.getId(), quantity);
+    }
 
     /**
      * Take donuts out of the inventory.
