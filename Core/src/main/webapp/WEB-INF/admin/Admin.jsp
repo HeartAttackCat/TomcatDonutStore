@@ -10,7 +10,7 @@
 		<h1>Welcome Administrator</h1>
 		<div>
 			<a href="./admin?command=report">generate report</a>
-			<a>edit menu</a>
+			<a href="./admin?command=menu">edit menu</a>
 		</div>
 	</body>
 </html>

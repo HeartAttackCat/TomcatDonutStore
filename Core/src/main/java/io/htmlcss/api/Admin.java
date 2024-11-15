@@ -35,7 +35,11 @@ public class Admin extends HttpServlet {
 		}
 		
 		if(param.equalsIgnoreCase("report")) {
-			response.getWriter().write("Hello, I am genrating your report!");
+			request.getRequestDispatcher("/WEB-INF/admin/Report.jsp").forward(request, response);
+		}
+		
+		if(param.equalsIgnoreCase("menu")) {
+			request.getRequestDispatcher("/WEB-INF/admin/Menu.jsp").forward(request, response);
 		}
 	}
 
