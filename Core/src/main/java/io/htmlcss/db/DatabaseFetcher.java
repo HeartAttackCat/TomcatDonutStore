@@ -543,6 +543,48 @@ public class DatabaseFetcher {
 		}
 	}
 
+	public boolean updateTray(Tray t) {
+		if (t instanceof BakingTray) {
+			return updateBakingTray((BakingTray) t);
+		} else if (t instanceof InventoryTray) {
+			return updateInventoryTray((InventoryTray) t);
+		} else {
+			return false;
+		}
+	}
+
+	private boolean updateBakingTray(BakingTray t) {
+		try {
+			String sql = "UPDATE bakingDonuts SET quantity = ? WHERE donutID = ? AND startBakingTime = ?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, t.getQuantity());
+			stmt.setInt(2, t.getDonutID());
+			long startBakingTime = t.getStartBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			stmt.setDate(3, new java.sql.Date(startBakingTime));
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	private boolean updateInventoryTray(InventoryTray t) {
+		try {
+			String sql = "UPDATE inventory SET quantity = ? WHERE donutID = ? AND expireTime = ?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			stmt.setInt(1, t.getQuantity());
+			stmt.setInt(2, t.getDonutID());
+			long expireTime = t.getExpirationDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			stmt.setDate(3, new java.sql.Date(expireTime));
+			stmt.executeUpdate();
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public boolean deleteTray(Tray t) {
 		if (t instanceof BakingTray) {
 			return deleteBakingTray((BakingTray) t);
@@ -611,7 +653,6 @@ public class DatabaseFetcher {
 	}
 
 	private InventoryTray parseInventoryTray(ResultSet record) throws SQLException {
-		// TODO: Get tray id
 		int trayID = record.getInt(1);
 		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);
@@ -624,7 +665,6 @@ public class DatabaseFetcher {
 	}
 
 	private BakingTray parseBakingTray(ResultSet record) throws SQLException {
-		// TODO: Get tray id
 		int trayID = record.getInt(1);
 		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);

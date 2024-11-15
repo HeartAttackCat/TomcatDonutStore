@@ -199,4 +199,33 @@ public abstract class Tray {
     public int getTrayID() {
         return this.trayID;
     }
+
+    public static int takeDonutsFromInventory(int donutID, int quantity) {
+        int taken = 0;
+        int q_needed = quantity;
+        for (Tray t : getInventoryTrays()) {
+            if (t.getDonutID() == donutID) {
+                int q = t.getQuantity();
+                if (q > q_needed) {
+                    t.quantity -= q_needed;
+                    taken += q_needed;
+                    q_needed = 0;
+                    db.updateTray(t);
+                } else {
+                    taken += q;
+                    q_needed -= q;
+                    t.quantity = 0;
+                    db.deleteTray(t);
+                }
+                if (quantity == 0) {
+                    break;
+                }
+            }
+        }
+        return taken;
+    }
+
+    public static int takeDonutsFromInventory(Donut d, int quantity) {
+        return takeDonutsFromInventory(d.getId(), quantity);
+    }
 }
