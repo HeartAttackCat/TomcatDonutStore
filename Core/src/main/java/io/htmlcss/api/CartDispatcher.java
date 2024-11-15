@@ -62,19 +62,9 @@ public class CartDispatcher extends HttpServlet {
 			return;
 		}
 		
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-REMOVE BLOCK WHEN CART.JSP IS DONE-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-		List<Order> orders = cart.getItems();
-		
-		for(Order order: orders) {
-			response.getWriter().append("[Cart Item] " + order.getItem().getType() + " " + order.getItem().getFlavor() + " | amount "+order.getQuantity()+", Subtotal: "+order.getQuantity()*order.getItem().getPrice()+"\n");
-		}
-		
-		response.getWriter().append("[Cart Total] " + cart.getTotalCost() + "\n");
-		//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-		
 		
 		//TODO uncomment next line when cart.jsp is needed
-		// request.getRequestDispatcher("/WEB-INF/cart.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/cart.jsp").forward(request, response);
 	}
 	
 	public void addToCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws IOException, ServletException {
