@@ -28,6 +28,7 @@ import io.htmlcss.model.ReportDataSales;
 import io.htmlcss.model.Tray;
 
 
+
 public class DatabaseFetcher {
 	Connection dbConnection = null;
 	/**
@@ -684,4 +685,172 @@ public class DatabaseFetcher {
 		BakingTray tray = new BakingTray(trayID, donutID, quantity, bigT);
 		return tray;
 	}
+	
+	/**
+	 * Updates a requested order to be complete.
+	 * @param date
+	 * @param id
+	 * @return
+	 */
+	public boolean updateOrder(String date, int id) {
+		try {
+		    String sql = "update dOrder set complete=1 where orderID=? and purchaseDate=?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+			stmt.setInt(1, id);
+			stmt.setString(2, date);
+			stmt.executeUpdate();
+			return true; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
+	 * Obtains a list of all of the current pending orders.
+	 * @return
+	 */
+	public List<Cart> getActiveOrders(){
+		Order temp = null;
+		Donut tDonut = null;
+		Customer goku = null;
+		Cart tCart = null;
+		int quant = 0;
+		ArrayList<Cart> orders = new ArrayList<Cart>();
+		try {
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder WHERE complete=0");
+			ResultSet records = stmt.executeQuery();
+			
+			while(records.next()) {
+				tDonut = this.getDonut(records.getInt(2));
+				goku = this.getCustomer(records.getInt(4));
+				quant = records.getInt(5);
+				temp = new Order(tDonut, quant);
+				tCart = new Cart(goku, temp, false, records.getInt(1), records.getString(3));
+				orders.add(tCart);
+			}
+			
+			orders = this.mergeCarts(orders);
+			return orders;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Merges an arraylist of carts with the same id.
+	 * @param carts
+	 * @return
+	 */
+	private ArrayList<Cart> mergeCarts(ArrayList<Cart> carts){
+		ArrayList<Cart> uniqueCarts = new ArrayList<Cart>();
+		ArrayList<Order> orders;
+		for(Cart i : carts) {
+			if(!this.doesCartExist(uniqueCarts, i)) {
+				orders = new ArrayList<Order>();
+				for(Cart j : carts) {
+					// Check if they're the same order ID and date and then merge.
+					if (this.isSameOrder(j, i)) {
+						orders = this.addOrders(orders, i);
+					}
+				}
+				uniqueCarts.add(new Cart(i.getBuyer(), orders, i.getStatus(), i.getOrderID(), i.getDate()));
+			}
+		}
+		return uniqueCarts;
+	}
+	
+	/**
+	 * Gets all of the orders from a customer and then adds it to an array list.
+	 */
+	private ArrayList<Order> addOrders(ArrayList<Order> orders, Cart target){
+		for(Order i: target.getItems()) {
+			orders.add(i);
+		}
+		return orders;
+	}
+	
+	/**
+	 * Checks if two carts would be considered the same order.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private boolean isSameOrder(Cart x, Cart y) {
+		if (x.getOrderID() == y.getOrderID() && x.getDate().equals(y.getDate())) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if a cart exists.
+	 * @param carts
+	 * @param target
+	 * @return
+	 */
+	private boolean doesCartExist(ArrayList<Cart> carts, Cart target) {
+		for(Cart i: carts) {
+			if(isSameOrder(i, target)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Gets a specified customer id.
+	 * @param id
+	 * @return
+	 */
+	public Customer getCustomer(int id) {
+		Customer Goku = null;
+		try {
+		    String sql = "select * from customerInfo where customerID=?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+			stmt.setInt(1, id);
+			ResultSet records = stmt.executeQuery();
+			
+			while(records.next()) {
+				Goku = parseCustomer(records);
+			}
+			
+			return Goku;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return null;
+		
+		}
+	
+		/**
+		 * Parses a given result set that is related to a customer.
+		 * @param records
+		 * @return
+		 */
+		private Customer parseCustomer(ResultSet records) {
+			try {
+				String firstName = records.getString(2);
+				String lastName = records.getString(3);
+				int zipcode = records.getInt(4);
+				String address = records.getString(5);
+				String phone = records.getString(6);
+				String email = records.getString(7);
+				String card = records.getString(8);
+				return new Customer(firstName, lastName, address, phone, email, card, zipcode);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+	
 }

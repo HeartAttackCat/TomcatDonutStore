@@ -61,7 +61,6 @@ public class ReportData {
 	}
 
 	public Dictionary<Integer, Integer> getdQuant() {
-		// TODO Auto-generated method stub
 		return this.dQuant;
 	}
 }
