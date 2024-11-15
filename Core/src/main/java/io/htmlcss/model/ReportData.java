@@ -61,4 +61,9 @@ public class ReportData {
 	public Enumeration<Integer> getDonutIds() {
 		return this.dQuant.keys();
 	}
+
+	public Dictionary<Integer, Integer> getdQuant() {
+		// TODO Auto-generated method stub
+		return this.dQuant;
+	}
 }
