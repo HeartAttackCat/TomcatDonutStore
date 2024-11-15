@@ -422,7 +422,7 @@ public class DatabaseFetcher {
 	 * @return Raw sales data.
 	 */
 	public ReportData generateSalesReport(String date, int dateRange) {
-		ReportData data = new ReportDataSales();
+		ReportDataSales data = new ReportDataSales();
 		Integer id;
 		Integer quant;
 		Float price;
