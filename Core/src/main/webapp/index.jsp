@@ -107,7 +107,7 @@
             }
 
             /* Button for product details */
-            .donut button {
+            .donut button1{
                 background-color: #6F0081;
                 color: #F2E6FF;
                 border: none;
@@ -120,7 +120,24 @@
                 box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
             }
 
-            .donut button:hover {
+            .donut button1:hover {
+                background-color: #57006A;
+            }
+            
+            .donut button2{
+                background-color: #F2E6FF ;
+                color: #6F0081;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .donut button2:hover {
                 background-color: #57006A;
             }
 
@@ -128,7 +145,7 @@
             .donut:hover {
                 transform: translateY(-10px);
             }
-
+            
             /* Responsive adjustments */
             @media (max-width: 768px) {
                 .title {
@@ -164,9 +181,17 @@
                         <h4><%= donut.getFlavor() %> - $ <%= donut.getPrice() %></h4>
 
                         <!-- Button for product details redirection -->
-                        <button onclick="window.location.href='product?product=<%= donut.getId() %>'">
+                        <button1 onclick="window.location.href='product?product=<%= donut.getId() %>'">
                             View Details
-                        </button>
+                        </button1>
+                        
+                        <br>
+                        <br>
+                        <br>
+                        
+                        <button2 onclick="window.location.href='Cart?command=add&did=<%= donut.getId()%>&quantity=1' " >
+                        	Add to Cart
+                        </button2>
                     </div>
                     <%
                 }
