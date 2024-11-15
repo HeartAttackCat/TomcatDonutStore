@@ -191,7 +191,7 @@ public class DatabaseFetcher {
 	public boolean insertCart(Cart cart){
 		float totalPrice = 0;
 		int totalQuantity = 0;
-		int orderID = 0; // TODO fix this
+		int orderID = 0; 
 		int customerID = 0;
 
         SimpleDateFormat str = new SimpleDateFormat("yyyy-MM-dd"); 
@@ -418,7 +418,7 @@ public class DatabaseFetcher {
 	 * @return Raw sales data.
 	 */
 	public ReportData generateSalesReport(String date, int dateRange) {
-		ReportData data = new ReportData();
+		ReportData data = new ReportDataSales();
 		Integer id;
 		Integer quant;
 		Float price;
