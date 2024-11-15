@@ -477,18 +477,18 @@ public class DatabaseFetcher {
 			}
 	}
 
-	public boolean insertTray(Tray t) {
+	public int insertTray(Tray t) {
 		// Tray can either be a BakingTray or an InventoryTray
 		if (t instanceof BakingTray) {
 			return insertBakingTray((BakingTray) t);
 		} else if (t instanceof InventoryTray) {
 			return insertInventoryTray((InventoryTray) t);
 		} else {
-			return false;
+			return -1;
 		}
 	}
 
-	private boolean insertBakingTray(BakingTray t) {
+	private int insertBakingTray(BakingTray t) {
 		try {
 			String sql = "INSERT INTO bakingDonuts (donutID, quantity, startBakingTime, endBakingTime) VALUES (?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
@@ -502,29 +502,44 @@ public class DatabaseFetcher {
 			stmt.setDate(3, new java.sql.Date(startBakingTime));
 			stmt.setDate(4, new java.sql.Date(endBakingTime));
 			stmt.executeUpdate();
-			return true;
+
+			// Return the trayID
+			String query = "SELECT trayID FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			PreparedStatement stmt2 = dbConnection.prepareStatement(query);
+			stmt2.setInt(1, t.getDonutID());
+			stmt2.setDate(2, new java.sql.Date(startBakingTime));
+			ResultSet records = stmt2.executeQuery();
+			if (records.next()) {
+				return records.getInt(1);
+			} else {
+				return -1;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 	}
 
-	private boolean insertInventoryTray(InventoryTray t) {
+	private int insertInventoryTray(InventoryTray t) {
 		try {
-			String sql = "INSERT INTO inventory (donutID, quantity, expireTime) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO inventory (donutID, quantity, expireTime, trayID) VALUES (?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, t.getDonutID());
 			stmt.setInt(2, t.getQuantity());
+			stmt.setInt(4, t.getTrayID());
 			
 			// Convert date to ms since epoch
 			long expireTime = t.getExpirationDate().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
 			
 			stmt.setDate(3, new java.sql.Date(expireTime));
 			stmt.executeUpdate();
-			return true;
+
+			// Return the trayID
+			return t.getTrayID();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 	}
 
