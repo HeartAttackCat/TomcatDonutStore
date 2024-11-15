@@ -1,12 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
-<%@ page import="java.util.List,io.htmlcss.model.Donut,io.htmlcss.db.DatabaseFetcher,io.htmlcss.db.DBFactory"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List, io.htmlcss.model.Donut, io.htmlcss.model.Cart, io.htmlcss.model.Order"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Donut Factory</title>
-        <meta name="description" content="Order donuts from Grill's Donut Factory.">
+        <title>Donut Factory - Cart</title>
+        <meta name="description" content="Your shopping cart at Grill's Donut Factory.">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <style>
             /* Reset and base styles */
@@ -80,7 +80,55 @@
                 gap: 30px;
                 width: 100%;
             }
+			
+			/*checkout button stuff */
+			.checkout {
+				background-color: #771145;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+                text-align: center;
+                transition: transform 0.2s ease-in-out;
+                border: 2px solid #A372D1;
+			}
+			
+			.checkout h3 {
+                font-size: 24px;
+                font-weight: bold;
+                color: #DECAB6;
+                margin-bottom: 20px;
+            }
 
+            .checkout h4 {
+                font-size: 15px;
+                font-weight: bold;
+                color: #DECAB6;
+                margin-bottom: 20px;
+            }
+
+            /* Button for product details */
+            .checkout button {
+                background-color: #6F0081;
+                color: #F2E6FF;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .checkout button:hover {
+                background-color: #57006A;
+            }
+
+            /* Hover effect for donut cards */
+            .checkout:hover {
+                transform: translateY(-10px);
+            }
+			
             /* Styling for each donut item */
             .donut {
                 background-color: #771145;
@@ -145,32 +193,31 @@
         <!-- Header with Title Image and Cart Icon -->
         <div class="header">
             <img decoding="async" class="title" src="./images/logo.png" alt="Donut Factory Title">
-            <a href="Cart">
-                <img src="./images/shopping-cart.svg" alt="Cart Icon" class="cart-icon">
-            </a>
         </div>
 
-        <!-- Outer container for content -->
+        <!-- Outer container for cart content -->
         <div class="outer">
-            <div class="wrapper" id="content">
-                <%! DatabaseFetcher db = DBFactory.getDatabaseFetcher(); %>
+            <div class="wrapper" id="cart-content">
+                <h2>Your Cart</h2>
                 <%
-                List<Donut> donuts = db.getMenu();
-                for (Donut donut : donuts) {
+                Cart cart = (Cart) session.getAttribute("cart");
+        		List<Order> cartItems = cart.getItems();
+                
+                double total = cart.getTotalCost();
+                for (Order order : cartItems) {
                     %>
-                    <!-- Individual donut container styled with purple theme -->
                     <div class="donut">
-                        <h3><%= donut.getType() %></h3>
-                        <h4><%= donut.getFlavor() %> - $ <%= donut.getPrice() %></h4>
-
-                        <!-- Button for product details redirection -->
-                        <button onclick="window.location.href='product?product=<%= donut.getId() %>'">
-                            View Details
-                        </button>
+                        <h3><%= order.getItem().getType() %> - <%= order.getItem().getFlavor() %>  </h3>
+                        <h4><%= order.getQuantity()%> - $ <%= String.format("%.2f", order.getItem().getPrice() * order.getQuantity()) %></h4>
                     </div>
                     <%
                 }
-                %>
+                    %>
+                    <div class="checkout">
+	                    <h3>Total: $<%= String.format("%.2f", total) %></h3>
+	                    <button onclick="window.location.href='checkout.jsp'">Proceed to Checkout</button>
+                    </div>
+                    
             </div>
         </div>
     </body>
