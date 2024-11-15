@@ -28,10 +28,6 @@ public class ReportData {
 		}
 	}
 	
-	public Dictionary<Integer, Integer> getdQuant() {
-		return this.dQuant;
-	}
-	
 	/**
 	 * Obtains the total amount of items that have been sold.
 	 * @return
