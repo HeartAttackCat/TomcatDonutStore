@@ -80,7 +80,55 @@
                 gap: 30px;
                 width: 100%;
             }
+			
+			/*checkout button stuff */
+			.checkout {
+				background-color: #771145;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+                text-align: center;
+                transition: transform 0.2s ease-in-out;
+                border: 2px solid #A372D1;
+			}
+			
+			.checkout h3 {
+                font-size: 24px;
+                font-weight: bold;
+                color: #DECAB6;
+                margin-bottom: 20px;
+            }
 
+            .checkout h4 {
+                font-size: 15px;
+                font-weight: bold;
+                color: #DECAB6;
+                margin-bottom: 20px;
+            }
+
+            /* Button for product details */
+            .checkout button {
+                background-color: #6F0081;
+                color: #F2E6FF;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            }
+
+            .checkout button:hover {
+                background-color: #57006A;
+            }
+
+            /* Hover effect for donut cards */
+            .checkout:hover {
+                transform: translateY(-10px);
+            }
+			
             /* Styling for each donut item */
             .donut {
                 background-color: #771145;
@@ -165,8 +213,11 @@
                     <%
                 }
                     %>
-                    <h3>Total: $<%= String.format("%.2f", total) %></h3>
-                    <button onclick="window.location.href='checkout.jsp'">Proceed to Checkout</button>
+                    <div class="checkout">
+	                    <h3>Total: $<%= String.format("%.2f", total) %></h3>
+	                    <button onclick="window.location.href='checkout.jsp'">Proceed to Checkout</button>
+                    </div>
+                    
             </div>
         </div>
     </body>
