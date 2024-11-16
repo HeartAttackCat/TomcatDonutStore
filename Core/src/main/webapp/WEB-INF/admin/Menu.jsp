@@ -28,7 +28,7 @@
 		<br>
 		<br>
 		<div>
-		Modify Menu<br>
+		<h1>Modify Menu</h1><br>
                 <%! DatabaseFetcher db = DBFactory.getDatabaseFetcher(); %>
                 <%
                 List<Donut> donuts = db.getMenu();
