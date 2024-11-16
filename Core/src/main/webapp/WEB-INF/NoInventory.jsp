@@ -91,7 +91,6 @@ public class Checkout extends HttpServlet {
 		cart.setCustomer(customer);
 		
 		if(!this.checkInventory(cart)) {
-			this.updateInventory(cart);
 			String path = "/WEB-INF/NoInventory.jsp";
 			request.getRequestDispatcher(path).forward(request, response);
 			return;
