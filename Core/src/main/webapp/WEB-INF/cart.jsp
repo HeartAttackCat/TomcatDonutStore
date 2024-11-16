@@ -245,7 +245,7 @@
                 
                 <div class="checkout">
 	            	<h3>Total: $<%= String.format("%.2f", total) %></h3>
-	                <button onclick="window.location.href='checkout.jsp'">Proceed to Checkout</button>
+	                <button onclick="window.location.href='./Checkout?command=checkout'">Proceed to Checkout</button>
                 </div>
                 
                 <%

@@ -209,6 +209,9 @@ public class DatabaseFetcher {
         orderID = this.generateOrderID(date);
 		List<Order> items = cart.getItems();
 		Order temp = null;
+		
+		cart.setOrderID(orderID);
+		cart.setDate(date);
 
 		this.insertCustomer(cart.getBuyer());
 		customerID = this.getCustomerID();
@@ -521,7 +524,7 @@ public class DatabaseFetcher {
 			stmt.executeUpdate();
 
 			// Return the trayID
-			String query = "SELECT trayID FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			String query = "SELECT id trayID FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
 			PreparedStatement stmt2 = dbConnection.prepareStatement(query);
 			stmt2.setInt(1, t.getDonutID());
 			stmt2.setDate(2, new java.sql.Date(startBakingTime));
@@ -713,6 +716,44 @@ public class DatabaseFetcher {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	/**
+	 * This is for fetching a given id later. This is a rather 
+	 * lazy implementation that introduces a lot of overhead.
+	 * @param id
+	 * @param date
+	 * @return
+	 */
+	public Cart getOrderByID(int id, String date) {
+		Order temp = null;
+		Donut tDonut = null;
+		Customer goku = null;
+		Cart tCart = null;
+		int quant = 0;
+		ArrayList<Cart> orders = new ArrayList<Cart>();
+		try {
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder WHERE orderID=? and purchaseDate=?");
+			stmt.setInt(1, id);
+			stmt.setString(2, date);
+			ResultSet records = stmt.executeQuery();
+			
+			while(records.next()) {
+				tDonut = this.getDonut(records.getInt(2));
+				goku = this.getCustomer(records.getInt(4));
+				quant = records.getInt(5);
+				temp = new Order(tDonut, quant);
+				tCart = new Cart(goku, temp, false, records.getInt(1), records.getString(3));
+				orders.add(tCart);
+			}
+			
+			orders = this.mergeCarts(orders);
+			return orders.get(0); // A very lazy solution
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	/**
