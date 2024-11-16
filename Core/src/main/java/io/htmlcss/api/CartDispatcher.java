@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 /**
  * Servlet implementation class CartDispatcher
  */
-@WebServlet("/Cart")
 public class CartDispatcher extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     
@@ -49,6 +48,8 @@ public class CartDispatcher extends HttpServlet {
 				showCart(request, response, cart);
 			}
 		}
+		
+		request.getRequestDispatcher("/WEB-INF/empty.jsp").forward(request, response);
 	}
 	
 	public void showCart(HttpServletRequest request, HttpServletResponse response, Cart cart) throws IOException, ServletException {
@@ -104,8 +105,7 @@ public class CartDispatcher extends HttpServlet {
 		}
 		
 		if (cart == null) {
-			Cart newCart = new Cart();
-			cart = newCart;
+			return;
 		}
 		
 		int donutID = Integer.parseInt(donutIDString);
@@ -114,6 +114,15 @@ public class CartDispatcher extends HttpServlet {
 		if (!cart.removeDonuts(donutID, donutQuan))
 		{
 			request.getRequestDispatcher("/WEB-INF/fof.jsp").forward(request, response);
+			return;
+		}
+		
+		if(cart.getItems().size() == 0) {
+			cart = null;
+			
+			HttpSession session = request.getSession();
+			session.setAttribute("cart", cart);
+			
 			return;
 		}
 		
