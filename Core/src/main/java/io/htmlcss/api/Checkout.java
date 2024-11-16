@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpSession;
 /**
  * Servlet implementation class Checkout
  */
-@WebServlet("/Checkout")
 public class Checkout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
