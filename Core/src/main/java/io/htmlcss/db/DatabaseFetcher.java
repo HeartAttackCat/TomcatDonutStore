@@ -700,6 +700,9 @@ public class DatabaseFetcher {
 	 */
 	public boolean updateOrder(String date, int id) {
 		try {
+			System.out.println(date);
+
+			System.out.println(id);
 		    String sql = "update dOrder set complete=1 where orderID=? and purchaseDate=?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			
@@ -768,6 +771,7 @@ public class DatabaseFetcher {
 			ResultSet records = stmt.executeQuery();
 			
 			while(records.next()) {
+				
 				tDonut = this.getDonut(records.getInt(2));
 				goku = this.getCustomer(records.getInt(4));
 				quant = records.getInt(5);

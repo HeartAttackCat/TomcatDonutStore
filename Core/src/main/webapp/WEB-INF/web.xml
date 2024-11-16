@@ -85,5 +85,13 @@
   	<servlet-name>user-cart</servlet-name>
   	<url-pattern>/Cart</url-pattern>
   </servlet-mapping>
-
+  
+  <servlet>
+  	<servlet-name>employeeservlet</servlet-name>
+  	<servlet-class>io.htmlcss.api.Employee</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>employeeservlet</servlet-name>
+  	<url-pattern>/employee</url-pattern>
+  </servlet-mapping>
 </web-app>
