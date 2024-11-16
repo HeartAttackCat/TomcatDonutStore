@@ -487,14 +487,10 @@ public class DatabaseFetcher {
 				return data;
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return null;
 			}
 			
 			return data;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+
 	}
 
 	public int insertTray(Tray t) {
