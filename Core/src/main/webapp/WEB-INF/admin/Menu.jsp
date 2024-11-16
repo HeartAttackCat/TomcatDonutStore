@@ -40,7 +40,7 @@
                         
 						<form method="get" action="./admin?command=menu">
 						<label>Donut type:</label>
-						<input type="hidden" value=<%= donut.getId() %>>
+						<input type="hidden" name="id" value=<%= donut.getId() %>>
 						<input type="text" name="type" value=<%= donut.getType() %>>
 						<label>Donut flavor:</label>
 						<input type="text" name="flavor" value=<%= donut.getFlavor() %>>
@@ -58,7 +58,7 @@
 						
 						<input type="hidden" value="menu" name="command">
 						<input type="hidden" value="delete" name="modCommand">
-						<input type="hidden" value=<%= donut.getId() %>>
+						<input type="hidden" name="id" value=<%= donut.getId() %>>
 						<input type="submit" value="Delete Donut">
 						</form>
                     </div>
