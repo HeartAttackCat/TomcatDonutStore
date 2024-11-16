@@ -56,7 +56,7 @@ public class Checkout extends HttpServlet {
 		}
 	}
 	
-	public void placeOrder(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void placeOrder(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String firstName, lastName, address, phoneNumber, email, cardID, zip;
 		DatabaseFetcher db = DBFactory.getDatabaseFetcher();
 		firstName = request.getParameter("fname");
@@ -71,27 +71,12 @@ public class Checkout extends HttpServlet {
 		Cart cart = (Cart) sess.getAttribute("cart");
 		
 		if(firstName == null || lastName == null || address == null || phoneNumber == null || email == null || cardID == null || zip == null) {
-			response.setContentType("text/html");
-			response.getWriter().append("""
-					<html>
-						<head>
-							<title>Error</title>
-						</head>
-						<body>
-							<h1> Missing fields... <h1>
-						</body>
-					</html>
-					""");
+			displayError(response, "Missing feilds...");
 			return;
 		}
 		
 		if(cart == null) {
-			response.setContentType("text/html");
-			response.getWriter().append("""
-					<html>
-						<h1> Missing cart... <h1>
-					</html>
-					""");
+			displayError(response, "No cart detetcted...");
 			return;
 		}
 		
@@ -105,12 +90,22 @@ public class Checkout extends HttpServlet {
 		
 		db.insertCart(cart);
 		
+		request.getRequestDispatcher("/WEB-INF/Receipt.jsp").forward(request, response);
+	}
+	
+	public void displayError(HttpServletResponse response, String cause) throws IOException {
 		response.setContentType("text/html");
-		response.getWriter().append("""
+		response.getWriter().append(String.format("""
 				<html>
-					<h1> Order placed! <h1>
+					<head>
+						<title>Checkout Error</title>
+					</head>
+					<body>
+						<h1> %s <h1>
+					</body>
 				</html>
-				""");
+				""",
+				cause));
 	}
 
 	/**
