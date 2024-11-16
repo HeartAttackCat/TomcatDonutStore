@@ -517,7 +517,7 @@ public class DatabaseFetcher {
 			stmt.executeUpdate();
 
 			// Return the trayID
-			String query = "SELECT trayID FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			String query = "SELECT id trayID FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
 			PreparedStatement stmt2 = dbConnection.prepareStatement(query);
 			stmt2.setInt(1, t.getDonutID());
 			stmt2.setDate(2, new java.sql.Date(startBakingTime));
