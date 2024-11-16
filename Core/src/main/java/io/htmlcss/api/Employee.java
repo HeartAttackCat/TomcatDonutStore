@@ -3,6 +3,7 @@ package io.htmlcss.api;
 import io.htmlcss.db.*;
 import io.htmlcss.model.*;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -30,18 +31,27 @@ public class Employee extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		String param = request.getParameter("command");
-		
 		if (param == null) {
 			request.getRequestDispatcher("/WEB-INF/employee/Employee.jsp").forward(request, response);
 			return;
 		}
 		if(param.equalsIgnoreCase("orderComplete")) {
+			
 			int id = Integer.parseInt(request.getParameter("id"));
 			String date = request.getParameter("date");
-			DBFactory.getDatabaseFetcher().updateOrder(date, id);
-			System.out.println("hit");
-//			Cart.completeOrder(date, id);
+			Cart.completeOrder(date, id);
 			param = "order";
+		}
+		
+		if(param.equalsIgnoreCase("trayAdd")) {
+			String p = request.getParameter("id");
+			if (p != null) {
+				int id = Integer.parseInt(request.getParameter("donuts"));
+				LocalDateTime date = LocalDateTime.now();
+				Tray tray = new BakingTray(id, 20, date);
+			}
+
+			param="tray";
 		}
 		
 		if(param.equalsIgnoreCase("order")) {
@@ -53,38 +63,6 @@ public class Employee extends HttpServlet {
 			request.getRequestDispatcher("/WEB-INF/employee/Tray.jsp").forward(request, response);
 			return ;
 		}
-		
-//		if(param.equalsIgnoreCase("menu")) {
-//			String subAction = request.getParameter("modCommand");
-//			if (subAction == null) {
-//				
-//			}
-//				
-//			else if (subAction.equalsIgnoreCase("add")) {
-//				String type = request.getParameter("type");
-//				String flavor = request.getParameter("flavor");
-//				Float price = Float.parseFloat(request.getParameter("price"));
-//				String desc = request.getParameter("desc");
-//				Donut newDonut = new Donut(-1, type, flavor, desc, type+flavor);
-//				newDonut.setPrice(price);
-//				DBFactory.getDatabaseFetcher().insertDonut(newDonut);
-//			}
-//			else if (subAction.equalsIgnoreCase("delete")) {
-//				int id = Integer.parseInt(request.getParameter("id"));
-//				DBFactory.getDatabaseFetcher().deleteDonut(id);
-//			}
-//			else if (subAction.equalsIgnoreCase("modify")) {
-//				int id = Integer.parseInt(request.getParameter("id"));
-//				String type = request.getParameter("type");
-//				String flavor = request.getParameter("flavor");
-//				Float price = Float.parseFloat(request.getParameter("price"));
-//				String desc = request.getParameter("desc");
-//				Donut donut = new Donut(id, type, flavor, desc, type+flavor);
-//				donut.setPrice(price);
-//				DBFactory.getDatabaseFetcher().modifyDonut(donut);
-//			}
-//			request.getRequestDispatcher("/WEB-INF/admin/Menu.jsp").forward(request, response);
-//		}
 	}
 
 	/**
