@@ -75,6 +75,8 @@ public class Checkout extends HttpServlet {
 		}
 		
 		if(cart == null) {
+			String path = "/WEB-INF/empty.jsp";
+			request.getRequestDispatcher(path).forward(request, response);
 			displayError(response, "No cart detetcted...");
 			return;
 		}

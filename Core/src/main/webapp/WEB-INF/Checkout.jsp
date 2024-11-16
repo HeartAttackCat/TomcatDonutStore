@@ -8,13 +8,13 @@
 	</head>
 	<body>
 		<form method=GET action="./Checkout">
-			First Name <input type="text" name="fname"><br>
-			Last Name <input type="text" name="lname"><br>
-			Address <input type="text" name="addr">
-			Zip Code <input type="text" name="zip"><br>
-			Phone Number <input type="text" name="pnum"><br>
-			Email <input type="text" name="email"><br>
-			Card Number <input type="text" name="card"><br>
+			First Name <input type="text" name="fname" required><br>
+			Last Name <input type="text" name="lname" required><br>
+			Address <input type="text" name="addr" required>
+			Zip Code <input type="text" name="zip" required><br>
+			Phone Number <input type="text" name="pnum" required><br>
+			Email <input type="text" name="email" required><br>
+			Card Number <input type="text" name="card" required><br>
 			<br>
 			<button type="submit">Submit</button>
 		</form>
