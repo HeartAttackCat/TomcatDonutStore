@@ -172,7 +172,7 @@
         <!-- Date Field -->
         <div class="form-group">
            	<form method="get" action="./admin?command=menu">
-           	
+           		<input type="hidden" value="nothing" name="modCommand">
            		<input type="hidden" value="menu" name="command">
            		<button type="submit" >Modify Menu</button>
            	</form>
