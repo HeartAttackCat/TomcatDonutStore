@@ -44,6 +44,7 @@ public class Donut {
 	 */
 	public void setPrice(float price) {
 		this.price = price;
+		DBFactory.getDatabaseFetcher().updateDonut(this);
 	}
 	
 	/**
@@ -68,6 +69,7 @@ public class Donut {
 	 */
 	public void setType(String type) {
 		this.type = type;
+		DBFactory.getDatabaseFetcher().updateDonut(this);
 	}
 	
 	/**
@@ -76,14 +78,6 @@ public class Donut {
 	 */
 	public Integer getId() {
 		return id;
-	}
-	
-	/**
-	 * Set the ID of the donut
-	 * @param id ID of the donut
-	 */
-	public void setId(Integer id) {
-		this.id = id;
 	}
 	
 	/**
@@ -100,6 +94,7 @@ public class Donut {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+		DBFactory.getDatabaseFetcher().updateDonut(this);
 	}
 	
 	/**
@@ -116,6 +111,7 @@ public class Donut {
 	 */
 	public void setImg(String img) {
 		this.img = img;
+		DBFactory.getDatabaseFetcher().updateDonut(this);
 	}
 	
 	/**
@@ -132,6 +128,7 @@ public class Donut {
 	 */
 	public void setFlavor(String flavor) {
 		this.flavor = flavor;
+		DBFactory.getDatabaseFetcher().updateDonut(this);
 	}
 
 	/**

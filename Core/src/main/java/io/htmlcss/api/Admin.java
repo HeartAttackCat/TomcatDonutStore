@@ -1,11 +1,11 @@
 package io.htmlcss.api;
 
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Servlet implementation class Admin
@@ -34,8 +34,12 @@ public class Admin extends HttpServlet {
 			return;
 		}
 		
-		if(param.equalsIgnoreCase("report")) {
-			request.getRequestDispatcher("/WEB-INF/admin/Report.jsp").forward(request, response);
+		if(param.equalsIgnoreCase("sales")) {
+			request.getRequestDispatcher("/WEB-INF/admin/ReportSales.jsp").forward(request, response);
+		}
+		
+		if(param.equalsIgnoreCase("waste")) {
+			request.getRequestDispatcher("/WEB-INF/admin/ReportStales.jsp").forward(request, response);
 		}
 		
 		if(param.equalsIgnoreCase("menu")) {

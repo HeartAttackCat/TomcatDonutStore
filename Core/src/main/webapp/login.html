@@ -1,21 +1,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Basic Login Code</title>
+    <meta charset="UTF-8">
+    <title>Basic Login Code</title>
+    <style>
+        /* General reset and body styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #2D0055;
+            color: #E0E0E0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* Container for centering and styling the form */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px;
+            background-color: #3A006F;
+            border-radius: 12px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Logo container styling */
+        .logo-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo-container img {
+            height: 80px;
+            cursor: pointer;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 28px;
+            color: #DECAB6;
+            margin-bottom: 20px;
+        }
+
+        /* Form and label styling */
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 18px;
+            color: #DECAB6;
+            text-align: left;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        /* Input field styling */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #A372D1;
+            border-radius: 8px;
+            background-color: #771145;
+            color: #E0E0E0;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button styling */
+        input[type="submit"],
+        .home-button {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #6F0081;
+            background-color: #F2E6FF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover,
+        .home-button:hover {
+            background-color: #57006A;
+            color: #F2E6FF;
+        }
+    </style>
 </head>
 <body>
-    <h1>Basic Login Page</h1>
-    <!-- Using form authentication-->
-    <form action="j_security_check" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="j_username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="j_password" required>
-        <br>
-        <input type="submit" value="Login">
-    </form>
+    <!-- Logo and Home Button -->
+    <div class="logo-container">
+        <a href="index.jsp">
+            <img src="./images/logo.png" alt="Home Logo">
+        </a>
+    </div>
 
+    <!-- Login Container -->
+    <div class="login-container">
+        <h1>Grilly's Admin Portal</h1>
+        <!-- Using form authentication-->
+        <form action="j_security_check" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="j_username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="j_password" required>
+            <input type="submit" value="Login">
+        </form>
+        <!-- Return to Home Button -->
+        <button class="home-button" onclick="location.href='index.jsp'">Return to Home</button>
+    </div>
 </body>
 </html>
+	

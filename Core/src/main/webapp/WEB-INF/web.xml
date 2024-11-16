@@ -75,6 +75,7 @@
   <servlet-mapping>
   	<servlet-name>checkout</servlet-name>
   	<url-pattern>/Checkout</url-pattern>
+
   </servlet-mapping>
 
 </web-app>
