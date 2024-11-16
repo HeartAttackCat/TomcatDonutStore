@@ -8,19 +8,25 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.text.ParseException; 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date; 
-import io.htmlcss.model.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import io.htmlcss.model.BakingTray;
+import io.htmlcss.model.Cart;
+import io.htmlcss.model.Customer;
+import io.htmlcss.model.Donut;
+import io.htmlcss.model.InventoryTray;
+import io.htmlcss.model.Order;
+import io.htmlcss.model.ReportData;
+import io.htmlcss.model.ReportDataSales;
+import io.htmlcss.model.Tray;
+
 
 
 public class DatabaseFetcher {
@@ -360,6 +366,10 @@ public class DatabaseFetcher {
 		}
 		return false; // failure
 	}
+
+	public boolean updateDonut(Donut d) {
+		return modifyDonut(d);
+	}
 	
 	/**
 	 * Modifies a donut in the database.
@@ -421,13 +431,13 @@ public class DatabaseFetcher {
 	 * @param range The number of days back we wish to go.
 	 * @return Raw sales data.
 	 */
-	public ReportData generateSalesReport(String date, int dateRange) {
+	public ReportDataSales generateSalesReport(String date, int dateRange) {
 		ReportDataSales data = new ReportDataSales();
 		Integer id;
 		Integer quant;
 		Float price;
 		try {
-			String query = "select itemID, quantity, price from dOrder where purchaseDate > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and purchaseDate <= STR_TO_DATE(?, \"%Y-%m-%d\")";
+			String query = "select itemID, quantity, price from dOrder where purchaseDate > Date_sub(?, INTERVAL ? DAY) and purchaseDate <= STR_TO_DATE(?, \"%Y-%m-%d\")";
 			PreparedStatement stmt = dbConnection.prepareStatement(query);
 			
 			stmt.setString(1, date);
@@ -456,7 +466,7 @@ public class DatabaseFetcher {
 			Integer id;
 			Integer quant;
 			try {
-				String query = "select id, quantity from inventory where expireTime > STR_TO_DATE(?, \"%Y-%m-%d\") - ? and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
+				String query = "select id, quantity from inventory where expireTime > Date_sub(?, INTERVAL ? DAY) and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
 				PreparedStatement stmt = dbConnection.prepareStatement(query);
 				stmt.setString(1, date);
 				stmt.setInt(2, range);
@@ -669,9 +679,178 @@ public class DatabaseFetcher {
 		int donutID = record.getInt(3);
 		int quantity = record.getInt(2);
 		Date startBakingTime = record.getDate(4);
+		@SuppressWarnings("unused")
 		Date endBakingTime = record.getDate(5); // We don't need this, it is calculated in the constructor.
 		LocalDateTime bigT = LocalDateTime.parse(startBakingTime.toString() + "T00:00:00");
 		BakingTray tray = new BakingTray(trayID, donutID, quantity, bigT);
 		return tray;
 	}
+	
+	/**
+	 * Updates a requested order to be complete.
+	 * @param date
+	 * @param id
+	 * @return
+	 */
+	public boolean updateOrder(String date, int id) {
+		try {
+		    String sql = "update dOrder set complete=1 where orderID=? and purchaseDate=?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+			stmt.setInt(1, id);
+			stmt.setString(2, date);
+			stmt.executeUpdate();
+			return true; // Success
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/**
+	 * Obtains a list of all of the current pending orders.
+	 * @return
+	 */
+	public List<Cart> getActiveOrders(){
+		Order temp = null;
+		Donut tDonut = null;
+		Customer goku = null;
+		Cart tCart = null;
+		int quant = 0;
+		ArrayList<Cart> orders = new ArrayList<Cart>();
+		try {
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder WHERE complete=0");
+			ResultSet records = stmt.executeQuery();
+			
+			while(records.next()) {
+				tDonut = this.getDonut(records.getInt(2));
+				goku = this.getCustomer(records.getInt(4));
+				quant = records.getInt(5);
+				temp = new Order(tDonut, quant);
+				tCart = new Cart(goku, temp, false, records.getInt(1), records.getString(3));
+				orders.add(tCart);
+			}
+			
+			orders = this.mergeCarts(orders);
+			return orders;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * Merges an arraylist of carts with the same id.
+	 * @param carts
+	 * @return
+	 */
+	private ArrayList<Cart> mergeCarts(ArrayList<Cart> carts){
+		ArrayList<Cart> uniqueCarts = new ArrayList<Cart>();
+		ArrayList<Order> orders;
+		for(Cart i : carts) {
+			if(!this.doesCartExist(uniqueCarts, i)) {
+				orders = new ArrayList<Order>();
+				for(Cart j : carts) {
+					// Check if they're the same order ID and date and then merge.
+					if (this.isSameOrder(j, i)) {
+						orders = this.addOrders(orders, i);
+					}
+				}
+				uniqueCarts.add(new Cart(i.getBuyer(), orders, i.getStatus(), i.getOrderID(), i.getDate()));
+			}
+		}
+		return uniqueCarts;
+	}
+	
+	/**
+	 * Gets all of the orders from a customer and then adds it to an array list.
+	 */
+	private ArrayList<Order> addOrders(ArrayList<Order> orders, Cart target){
+		for(Order i: target.getItems()) {
+			orders.add(i);
+		}
+		return orders;
+	}
+	
+	/**
+	 * Checks if two carts would be considered the same order.
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private boolean isSameOrder(Cart x, Cart y) {
+		if (x.getOrderID() == y.getOrderID() && x.getDate().equals(y.getDate())) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if a cart exists.
+	 * @param carts
+	 * @param target
+	 * @return
+	 */
+	private boolean doesCartExist(ArrayList<Cart> carts, Cart target) {
+		for(Cart i: carts) {
+			if(isSameOrder(i, target)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Gets a specified customer id.
+	 * @param id
+	 * @return
+	 */
+	public Customer getCustomer(int id) {
+		Customer Goku = null;
+		try {
+		    String sql = "select * from customerInfo where customerID=?";
+			PreparedStatement stmt = dbConnection.prepareStatement(sql);
+			
+			stmt.setInt(1, id);
+			ResultSet records = stmt.executeQuery();
+			
+			while(records.next()) {
+				Goku = parseCustomer(records);
+			}
+			
+			return Goku;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return null;
+		
+		}
+	
+		/**
+		 * Parses a given result set that is related to a customer.
+		 * @param records
+		 * @return
+		 */
+		private Customer parseCustomer(ResultSet records) {
+			try {
+				String firstName = records.getString(2);
+				String lastName = records.getString(3);
+				int zipcode = records.getInt(4);
+				String address = records.getString(5);
+				String phone = records.getString(6);
+				String email = records.getString(7);
+				String card = records.getString(8);
+				return new Customer(firstName, lastName, address, phone, email, card, zipcode);
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+	
 }

@@ -28,8 +28,6 @@ public class ReportData {
 		}
 	}
 	
-	
-	
 	/**
 	 * Obtains the total amount of items that have been sold.
 	 * @return
@@ -60,5 +58,9 @@ public class ReportData {
 	
 	public Enumeration<Integer> getDonutIds() {
 		return this.dQuant.keys();
+	}
+
+	public Dictionary<Integer, Integer> getdQuant() {
+		return this.dQuant;
 	}
 }
