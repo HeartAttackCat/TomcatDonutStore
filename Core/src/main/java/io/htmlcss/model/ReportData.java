@@ -90,5 +90,6 @@ public class ReportData {
 		}
 		
 		return DBFactory.getDatabaseFetcher().generateStaleReport(date, range);
+
 	}
 }

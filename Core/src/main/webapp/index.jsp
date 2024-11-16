@@ -59,6 +59,21 @@
             .cart-icon:hover {
                 transform: scale(1.1); /* Slight zoom effect on hover */
             }
+            
+            /* Admin Icon Styling */
+            .admin-icon {
+                position: absolute;
+                top: 10px; /* Adjusted for vertical alignment */
+                right: 920px; /* Adjusted to move it closer to the right side */
+                width: 60px;
+                height: 60px;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+
+            .admin-icon:hover {
+                transform: scale(1.1); /* Slight zoom effect on hover */
+            }
 
             /* Outer container to hold all content */
             .outer {
@@ -165,6 +180,11 @@
             <a href="Cart">
                 <img src="./images/shopping-cart.svg" alt="Cart Icon" class="cart-icon">
             </a>
+            
+            <a href="admin">
+                <img src="./images/profile-icon-avatar-icon-user-icon-person-icon-free-png.png" alt="Admin Icon" class="admin-icon">
+            </a>
+            
         </div>
 
         <!-- Outer container for content -->

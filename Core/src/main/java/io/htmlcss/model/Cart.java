@@ -4,6 +4,7 @@
  */
 package io.htmlcss.model;
 import java.util.ArrayList;
+import io.htmlcss.db.*;
 import java.util.List;
 
 import io.htmlcss.db.DBFactory;
@@ -11,6 +12,9 @@ import io.htmlcss.db.DBFactory;
 public class Cart {
     private Customer buyer = null;
     private List<Order> items;
+    private boolean status;
+    private int cartID;
+    private String date;
 
     /**
      * Constructor
@@ -27,14 +31,46 @@ public class Cart {
         }
         this.buyer = buyer;
         this.items = items;
+        this.status = false;
+    }
+    
+    /**
+     * This is a constructor for when we are fetching orders.
+     */
+    public Cart(Customer buyer, List<Order> items, boolean status, int id, String date){
+    	this(buyer, items);
+    	this.status = status;
+    	this.cartID = id;
+    	this.date = date;
+    }
+    
+    /**
+     * Constructor for when providing a singular order. This is mainly to 
+     * allow us combine the carts later.
+     * @param buyer
+     * @param items
+     * @param status
+     * @param id
+     * @param date
+     */
+    public Cart(Customer buyer, Order items, boolean status, int id, String date){
+    	this();
+    	this.items.add(items);
+    	this.buyer = buyer;
+    	this.status = status;
+    	this.cartID = id;
+    	this.date = date;
     }
 
     /**
      * Constructor for cart object when first loaded in on front end.
      */
     public Cart(){
+    	this.status = false;
         items = new ArrayList<Order>();
     }
+    
+
 
     /**
      * Get the buyer of the cart
@@ -129,5 +165,47 @@ public class Cart {
      */
     public static boolean placeOrder(Cart c) {
         return addCartToDB(c);
+    
+    public void addOrder(Order order) {
+    	this.items.add(order);    	
+    }
+    
+    /**
+     * sets itself as complete and updates the database 
+     */
+    public boolean setComplete() {
+    	
+    	this.status = DBFactory.getDatabaseFetcher().updateOrder(this.date, this.cartID);
+        return this.status;
+    }
+    
+    public int getOrderID() {
+    	return this.cartID;
+    }
+    
+    public String getDate() {
+    	return this.date;
+    }
+    
+    public boolean getStatus() {
+    	return this.status;
+    }
+    
+    
+    /**
+     * Gets a list of active orders that need to be satisfied.
+     * @return
+     */
+    public static ArrayList<Cart> getActiveOrders(){
+    	DatabaseFetcher db = DBFactory.getDatabaseFetcher();
+    	return (ArrayList<Cart>) db.getActiveOrders();
+    }
+    
+    /**
+     * Gets a list of the active orders.
+     * @return
+     */
+    public static ArrayList<Cart> activeOrders(){
+    	return getActiveOrders();
     }
 }
