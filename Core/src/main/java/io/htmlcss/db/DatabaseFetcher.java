@@ -726,7 +726,7 @@ public class DatabaseFetcher {
 		int quant = 0;
 		ArrayList<Cart> orders = new ArrayList<Cart>();
 		try {
-			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder WHERE orderID=? purchaseDate=?");
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder WHERE orderID=? and purchaseDate=?");
 			stmt.setInt(1, id);
 			stmt.setString(2, date);
 			ResultSet records = stmt.executeQuery();

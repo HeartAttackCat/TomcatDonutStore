@@ -77,5 +77,13 @@
   	<url-pattern>/Checkout</url-pattern>
 
   </servlet-mapping>
+    <servlet>
+  	<servlet-name>user-cart</servlet-name>
+  	<servlet-class>io.htmlcss.api.CartDispatcher</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>user-cart</servlet-name>
+  	<url-pattern>/Cart</url-pattern>
+  </servlet-mapping>
 
 </web-app>

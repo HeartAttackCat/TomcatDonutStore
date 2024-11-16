@@ -5,12 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Receipt</title>
 </head>
 <body>
 		<%
-		int oID = Integer.parseInt(request.getParameter("oid"));
-		String date = request.getParameter("date");
+
+		int oID = (int) request.getAttribute("oID");
+		String date = (String) request.getAttribute("date");
 		
 		Cart cart = Cart.getOrder(oID, date);
 		%>
@@ -25,8 +26,10 @@
                     <% Donut donut = order.getItem(); %>
                     <!-- Individual donut container styled with purple theme -->
                     <div class="donut">
-                        <h3><%= donut.getType() %></h3><br>
-                        <h4><%= donut.getFlavor() %> - $ <%= donut.getPrice() * order.getQuantity() %></h4><br>
+                        <h3><%= donut.getType() %> - <%= donut.getFlavor() %></h3>
+                        <h4> Cost: $ <%= donut.getPrice() * order.getQuantity() %></h4>
+                        <h4> Quantity: <%=order.getQuantity() %></h4>
+                        
                     </div>
                     <%
                 }

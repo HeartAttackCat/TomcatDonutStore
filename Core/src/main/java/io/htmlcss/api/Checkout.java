@@ -88,8 +88,17 @@ public class Checkout extends HttpServlet {
 		cart.setCustomer(customer);
 		
 		db.insertCart(cart);
-		
-		request.getRequestDispatcher("/WEB-INF/Receipt.jsp").forward(request, response);
+		// Pass this vital information onto the customer
+        String path = String.format("/WEB-INF/Receipt.jsp?oID=%d&date=%s", cart.getOrderID(), cart.getDate());
+
+        
+        System.out.println(path);
+        request.setAttribute("oID", cart.getOrderID());
+        request.setAttribute("date", cart.getDate());
+        
+        sess.setAttribute("customer", null);
+        sess.setAttribute("cart", null);
+		request.getRequestDispatcher(path).forward(request, response);
 	}
 	
 	public void displayError(HttpServletResponse response, String cause) throws IOException {
