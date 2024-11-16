@@ -460,6 +460,7 @@ public class DatabaseFetcher {
 			return null;
 		}
 	}
+
 		
 		public ReportData generateStaleReport(String date, int range) {
 			ReportData data = new ReportData();
@@ -485,6 +486,12 @@ public class DatabaseFetcher {
 				e.printStackTrace();
 				return null;
 			}
+			
+			return data;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public int insertTray(Tray t) {
