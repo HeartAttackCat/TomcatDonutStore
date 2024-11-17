@@ -803,7 +803,7 @@ public class DatabaseFetcher {
 				for(Cart j : carts) {
 					// Check if they're the same order ID and date and then merge.
 					if (this.isSameOrder(j, i)) {
-						orders = this.addOrders(orders, i);
+						orders = this.addOrders(orders, j);
 					}
 				}
 				uniqueCarts.add(new Cart(i.getBuyer(), orders, i.getStatus(), i.getOrderID(), i.getDate()));
@@ -899,6 +899,4 @@ public class DatabaseFetcher {
 			}
 			return null;
 		}
-		
-	
 }
