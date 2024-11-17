@@ -166,5 +166,17 @@
            	</form>
         </div>
     </div>
+        <div class="admin-container">
+        <h1>MOD POWERS</h1>
+
+        <!-- Date Field -->
+        <div class="form-group">
+           	<form method="get" action="./admin?command=menu">
+           		<input type="hidden" value="nothing" name="modCommand">
+           		<input type="hidden" value="menu" name="command">
+           		<button type="submit" >Modify Menu</button>
+           	</form>
+        </div>
+    </div>
 </body>
 </html>
