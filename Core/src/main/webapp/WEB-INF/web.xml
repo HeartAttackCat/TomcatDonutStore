@@ -69,6 +69,15 @@
   	<url-pattern>/admin</url-pattern>
   </servlet-mapping>
   <servlet>
+  	<servlet-name>checkout</servlet-name>
+  	<servlet-class>io.htmlcss.api.Checkout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>checkout</servlet-name>
+  	<url-pattern>/Checkout</url-pattern>
+
+  </servlet-mapping>
+    <servlet>
   	<servlet-name>user-cart</servlet-name>
   	<servlet-class>io.htmlcss.api.CartDispatcher</servlet-class>
   </servlet>

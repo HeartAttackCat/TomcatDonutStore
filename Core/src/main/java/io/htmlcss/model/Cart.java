@@ -191,6 +191,21 @@ public class Cart {
     	return this.status;
     }
     
+    // This is a bad but rushed.
+    public void setOrderID(int oid) {
+    	this.cartID = oid;
+    }
+    
+    public void setDate(String date) {
+    	this.date = date;
+    }
+    
+    public static Cart getOrder(int id, String date) {
+    	DatabaseFetcher db = DBFactory.getDatabaseFetcher();
+    	Cart val = db.getOrderByID(id, date);
+    	
+    	return val;
+    }
     
     /**
      * Gets a list of active orders that need to be satisfied.
