@@ -77,7 +77,7 @@ public class Checkout extends HttpServlet {
 		}
 		
 		if(cart == null) {
-			String path = "/WEB-INF/empty.jsp";
+			String path = "WEB-INF/empty.jsp";
 			request.getRequestDispatcher(path).forward(request, response);
 			return;
 		}
@@ -92,14 +92,14 @@ public class Checkout extends HttpServlet {
 		
 		if(!this.checkInventory(cart)) {
 			this.updateInventory(cart);
-			String path = "/WEB-INF/NoInventory.jsp";
+			String path = "WEB-INF/NoInventory.jsp";
 			request.getRequestDispatcher(path).forward(request, response);
 			return;
 		}
 		
 		db.insertCart(cart);
 		// Pass this vital information onto the customer
-        String path = String.format("/WEB-INF/Receipt.jsp?oID=%d&date=%s", cart.getOrderID(), cart.getDate());
+        String path = String.format("WEB-INF/Receipt.jsp?oID=%d&date=%s", cart.getOrderID(), cart.getDate());
 
         
         request.setAttribute("oID", cart.getOrderID());
