@@ -132,32 +132,6 @@
                 transition: background-color 0.3s ease;
                 box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
             }
-
-            .donut button1:hover {
-                background-color: #57006A;
-            }
-            
-            .donut button2{
-                background-color: #F2E6FF ;
-                color: #6F0081;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 8px;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-            }
-
-            .donut button2:hover {
-                background-color: #57006A;
-            }
-
-            /* Hover effect for donut cards */
-            .donut:hover {
-                transform: translateY(-10px);
-            }
             
             /* Responsive adjustments */
             @media (max-width: 768px) {
