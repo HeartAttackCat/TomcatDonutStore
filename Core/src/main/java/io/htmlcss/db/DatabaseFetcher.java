@@ -520,7 +520,7 @@ public class DatabaseFetcher {
 			stmt.executeUpdate();
 
 			// Return the trayID
-			String query = "SELECT id trayID FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			String query = "SELECT id FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
 			PreparedStatement stmt2 = dbConnection.prepareStatement(query);
 			stmt2.setInt(1, t.getDonutID());
 			stmt2.setDate(2, new java.sql.Date(startBakingTime));
@@ -538,7 +538,7 @@ public class DatabaseFetcher {
 
 	private int insertInventoryTray(InventoryTray t) {
 		try {
-			String sql = "INSERT INTO inventory (donutID, quantity, expireTime, trayID) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO inventory (donutID, quantity, expireTime, id) VALUES (?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, t.getDonutID());
 			stmt.setInt(2, t.getQuantity());
@@ -613,11 +613,10 @@ public class DatabaseFetcher {
 
 	private boolean deleteBakingTray(BakingTray t) {
 		try {
-			String sql = "DELETE FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			String sql = "DELETE FROM bakingDonuts WHERE id = ?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
-			stmt.setInt(1, t.getDonutID());
-			long startBakingTime = t.getStartBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			stmt.setDate(2, new java.sql.Date(startBakingTime));
+			System.out.println(t.getTrayID());
+			stmt.setInt(1, t.getTrayID());
 			stmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -899,4 +898,6 @@ public class DatabaseFetcher {
 			}
 			return null;
 		}
+		
+	
 }

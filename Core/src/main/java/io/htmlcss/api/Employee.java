@@ -4,6 +4,7 @@ import io.htmlcss.db.*;
 import io.htmlcss.model.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -29,7 +30,7 @@ public class Employee extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		List<Tray> t = Tray.updateBakedTrays(); // Update the trays
 		String param = request.getParameter("command");
 		if (param == null) {
 			request.getRequestDispatcher("/WEB-INF/employee/Employee.jsp").forward(request, response);

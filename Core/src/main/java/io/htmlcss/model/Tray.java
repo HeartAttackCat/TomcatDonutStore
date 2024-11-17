@@ -144,8 +144,9 @@ public abstract class Tray {
                 db.insertTray(inventoryTray);
                 
                 // Remove the BakingTray from the list of trays & database
-                trays.remove(tray);
-                db.deleteTray(tray);
+//                trays.remove(tray);
+                trays.remove(i);
+                db.deleteTray((BakingTray) tray);
                 i--;
             }
             i++;
