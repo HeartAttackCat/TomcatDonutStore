@@ -36,7 +36,6 @@ public class Employee extends HttpServlet {
 			return;
 		}
 		if(param.equalsIgnoreCase("orderComplete")) {
-			
 			int id = Integer.parseInt(request.getParameter("id"));
 			String date = request.getParameter("date");
 			Cart.completeOrder(date, id);
@@ -45,6 +44,7 @@ public class Employee extends HttpServlet {
 		
 		if(param.equalsIgnoreCase("trayAdd")) {
 			String p = request.getParameter("id");
+	
 			if (p != null) {
 				int id = Integer.parseInt(request.getParameter("donuts"));
 				LocalDateTime date = LocalDateTime.now();
