@@ -1,14 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
-<%@ page import="java.util.List,io.htmlcss.model.Donut"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ page session="true" %>
+<%@ page import="io.htmlcss.api.*, io.htmlcss.db.*, io.htmlcss.model.*, java.util.Enumeration, java.util.List" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Donut Factory</title>
-        <meta name="description" content="Order donuts from Grill's Donut Factory.">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
+<head>
+<meta charset="UTF-8">
+<title>Orders</title>
+<style>
             /* Reset and base styles */
             * {
                 margin: 0;
@@ -134,32 +133,6 @@
                 transition: background-color 0.3s ease;
                 box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
             }
-
-            .donut button1:hover {
-                background-color: #57006A;
-            }
-            
-            .donut button2{
-                background-color: #F2E6FF ;
-                color: #6F0081;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 8px;
-                font-size: 16px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-                box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-            }
-
-            .donut button2:hover {
-                background-color: #57006A;
-            }
-
-            /* Hover effect for donut cards */
-            .donut:hover {
-                transform: translateY(-10px);
-            }
             
             /* Responsive adjustments */
             @media (max-width: 768px) {
@@ -172,53 +145,40 @@
                 }
             }
         </style>
-    </head>
-    <body>
-        <!-- Header with Title Image and Cart Icon -->
-        <div class="header">
-            <img decoding="async" class="title" src="./images/logo.png" alt="Donut Factory Title">
-            <a href="Cart">
-                <img src="./images/shopping-cart.svg" alt="Cart Icon" class="cart-icon">
-            </a>
-            
-            <a href="admin">
-                <img src="./images/profile-icon-avatar-icon-user-icon-person-icon-free-png.png" alt="Admin Icon" class="admin-icon">
-            </a>
-            
-        </div>
-
-        <!-- Outer container for content -->
-        <div class="outer">
+</head>
+<body>
+<h1>Orders</h1><br>
+				<% List<Cart> orders = (List<Cart>) request.getSession().getAttribute("orders"); %>
+            <div class="outer">
             <div class="wrapper" id="content">
                 <%
-                List<Donut> donuts = Donut.getMenu();
-                for (Donut donut : donuts) {
+                for (Cart order : orders) {
                     %>
                     <!-- Individual donut container styled with purple theme -->
                     <div class="donut">
-                        <h3><%= donut.getType() %></h3>
-                        <h4><%= donut.getFlavor() %> - $ <%= donut.getPrice() %></h4>
-
-                        <!-- Button for product details redirection -->
-                        <button1 onclick="window.location.href='product?product=<%= donut.getId() %>'">
-                            View Details
-                        </button1>
-                        
-                        <br>
-                        <br>
-                        <br>
-                        
-                        <button2 onclick="window.location.href='Cart?command=add&did=<%= donut.getId()%>&quantity=1' " >
-                        	Add to Cart
-                        </button2>
+                    
+                        <h3><%= order.getBuyer().getFirstName() %>, <%= order.getBuyer().getLastName() %></h3>
+                            <%
+                			for (Order item: order.getItems()) {
+                            %>
+                            <div>
+                            <%= item.getItem().getType() %>, <%= item.getItem().getFlavor() %> Quantity: <%= item.getQuantity()%>
+                            <br>
+                            </div>
+						<%} %>
+						<form method="get" action="./employee">
+						
+						<input type="hidden" value="orderComplete" name="command">
+						<input type="hidden" name="id" value=<%= order.getOrderID() %>>
+						<input type="hidden" name="date" value=<%= order.getDate() %>>
+						<input type="submit" value="Complete Order">
+						</form>
                     </div>
                     <%
                 }
                 %>
-         	<form method="get" action = "./employee">
-           		<button type="submit" >Employee Portal</button>
-           	</form>
-            </div>
-        </div>
-    </body>
+		</div>
+		</div>
+		
+</body>
 </html>

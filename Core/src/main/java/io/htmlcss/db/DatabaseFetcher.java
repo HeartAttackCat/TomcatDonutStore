@@ -223,7 +223,6 @@ public class DatabaseFetcher {
 			totalPrice += temp.getQuantity() * temp.getItem().getPrice();
         }
 		// Mass insert into the table!
-		System.out.println(items.size());
 		for (int i = 0; i < items.size(); i++){
 			if (!this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date))
 				return false;
@@ -310,7 +309,6 @@ public class DatabaseFetcher {
 			while(records.next()) {
 				max = records.getInt(1);
 			}
-			System.out.println(max);
 			if (max == -1){
 				return 0;
 			}
@@ -462,36 +460,7 @@ public class DatabaseFetcher {
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-		
-	public ReportData generateStaleReport(String date, int range) {
-	    ReportData data = new ReportData();
-	    Integer id;
-	    Integer quant;
-	    try {
-	        String query = "select id, quantity from inventory where expireTime > Date_sub(?, INTERVAL ? DAY) and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
-	        PreparedStatement stmt = dbConnection.prepareStatement(query);
-	        stmt.setString(1, date);
-	        stmt.setInt(2, range);
-	        stmt.setString(3, date);
-	        ResultSet records = stmt.executeQuery();
-	        
-	        // Adds it all into the data object
-	        while (records.next()){
-	            id = records.getInt(1);
-	            quant = records.getInt(2);
-	            data.addItemQuantity(id, quant);
-	        }
-	        
-	        return data;
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    }
-	    
-	    return null;
-	}
-	
+  }
 	
 	public int insertTray(Tray t) {
 		// Tray can either be a BakingTray or an InventoryTray
@@ -510,26 +479,35 @@ public class DatabaseFetcher {
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, t.getDonutID());
 			stmt.setInt(2, t.getQuantity());
-
+			LocalDateTime temp = t.getStartBakingTime();
 			// Convert dates to ms since epoch
-			long startBakingTime = t.getStartBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			long endBakingTime = t.getEndBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			String startBakingTime = temp.getYear() + "-" + temp.getMonthValue() + "-" + temp.getDayOfMonth();
+			startBakingTime += " " + temp.getHour() + ":" +temp.getMinute() + ":" +temp.getSecond();
 			
-			stmt.setDate(3, new java.sql.Date(startBakingTime));
-			stmt.setDate(4, new java.sql.Date(endBakingTime));
+			temp = t.getEndBakingTime();
+			String endBakingTime = temp.getYear() + "-" + temp.getMonthValue() + "-" + temp.getDayOfMonth();
+			endBakingTime += " " + temp.getHour() + ":" +temp.getMinute() + ":" + temp.getSecond();
+			
+			System.out.println(endBakingTime);
+			System.out.println(startBakingTime);
+			stmt.setString(3, startBakingTime);
+			stmt.setString(4, endBakingTime);
 			stmt.executeUpdate();
 
 			// Return the trayID
-			String query = "SELECT id trayID FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			String query = "SELECT id FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
 			PreparedStatement stmt2 = dbConnection.prepareStatement(query);
 			stmt2.setInt(1, t.getDonutID());
-			stmt2.setDate(2, new java.sql.Date(startBakingTime));
+			stmt2.setString(2, startBakingTime);
+			System.out.println(endBakingTime);
 			ResultSet records = stmt2.executeQuery();
+
 			if (records.next()) {
 				return records.getInt(1);
 			} else {
 				return -1;
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
@@ -538,7 +516,7 @@ public class DatabaseFetcher {
 
 	private int insertInventoryTray(InventoryTray t) {
 		try {
-			String sql = "INSERT INTO inventory (donutID, quantity, expireTime, trayID) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO inventory (donutID, quantity, expireTime, id) VALUES (?, ?, ?, ?)";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, t.getDonutID());
 			stmt.setInt(2, t.getQuantity());
@@ -613,11 +591,9 @@ public class DatabaseFetcher {
 
 	private boolean deleteBakingTray(BakingTray t) {
 		try {
-			String sql = "DELETE FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
+			String sql = "DELETE FROM bakingDonuts WHERE id = ?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
-			stmt.setInt(1, t.getDonutID());
-			long startBakingTime = t.getStartBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			stmt.setDate(2, new java.sql.Date(startBakingTime));
+			stmt.setInt(1, t.getTrayID());
 			stmt.executeUpdate();
 			return true;
 		} catch (SQLException e) {
@@ -762,27 +738,38 @@ public class DatabaseFetcher {
 		Customer goku = null;
 		Cart tCart = null;
 		int quant = 0;
+		boolean status;
 		ArrayList<Cart> orders = new ArrayList<Cart>();
 		try {
-			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder WHERE complete=0");
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder");
 			ResultSet records = stmt.executeQuery();
-			
+			System.out.println(records);
 			while(records.next()) {
+
 				tDonut = this.getDonut(records.getInt(2));
 				goku = this.getCustomer(records.getInt(4));
 				quant = records.getInt(5);
 				temp = new Order(tDonut, quant);
-				tCart = new Cart(goku, temp, false, records.getInt(1), records.getString(3));
+				status = records.getBoolean(9);
+				tCart = new Cart(goku, temp, status, records.getInt(1), records.getString(3));
 				orders.add(tCart);
 			}
 			
 			orders = this.mergeCarts(orders);
-			return orders;
+			ArrayList<Cart> clean = new ArrayList<Cart>();
+			for(Cart i: orders) {
+				if (!i.getStatus()) {
+					clean.add(i);
+				}
+			}
+			
+			return clean;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		
+		return orders;
 	}
 	
 	/**
@@ -799,7 +786,7 @@ public class DatabaseFetcher {
 				for(Cart j : carts) {
 					// Check if they're the same order ID and date and then merge.
 					if (this.isSameOrder(j, i)) {
-						orders = this.addOrders(orders, i);
+						orders = this.addOrders(orders, j);
 					}
 				}
 				uniqueCarts.add(new Cart(i.getBuyer(), orders, i.getStatus(), i.getOrderID(), i.getDate()));

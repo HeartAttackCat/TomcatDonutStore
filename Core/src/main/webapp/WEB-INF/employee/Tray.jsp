@@ -1,14 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
-<%@ page import="java.util.List,io.htmlcss.model.Donut"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%@ page import="io.htmlcss.api.*, io.htmlcss.db.*, io.htmlcss.model.*, java.util.Enumeration, java.util.List" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Donut Factory</title>
-        <meta name="description" content="Order donuts from Grill's Donut Factory.">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style>
+<head>
+<meta charset="UTF-8">
+<title>Trays</title>
+<style>
             /* Reset and base styles */
             * {
                 margin: 0;
@@ -172,53 +171,58 @@
                 }
             }
         </style>
-    </head>
-    <body>
-        <!-- Header with Title Image and Cart Icon -->
-        <div class="header">
-            <img decoding="async" class="title" src="./images/logo.png" alt="Donut Factory Title">
-            <a href="Cart">
-                <img src="./images/shopping-cart.svg" alt="Cart Icon" class="cart-icon">
-            </a>
-            
-            <a href="admin">
-                <img src="./images/profile-icon-avatar-icon-user-icon-person-icon-free-png.png" alt="Admin Icon" class="admin-icon">
-            </a>
-            
-        </div>
+</head>
+<body>
 
-        <!-- Outer container for content -->
-        <div class="outer">
+<h1>Tray management</h1>
+<h2>Add Tray</h2>
+<div>
+           	<form method="get" action = "./employee?command=tray">
+				<select name="donuts" id="donuts">
+				    <option disabled selected value>Pick a donut</option>
+		            <%
+                	for (Donut i : Donut.getMenu()) {
+                    %>
+                    <option value=<%=i.getId() %>><%=i.getType() %>, <%=i.getFlavor() %></option>
+                    <%} %>
+				</select>
+           		<input type="hidden" value="trayAdd" name="command">
+           		<button type="submit" >Add Tray</button>
+           	</form>
+</div>
+<h2>Ready Trays</h2><br>
+<% List<Tray> bakingTrays = (List<Tray>) request.getSession().getAttribute("baking"); %>
+<% List<Tray> trays = (List<Tray>) request.getSession().getAttribute("inv"); %>
+
+                                        <div class="outer">
             <div class="wrapper" id="content">
                 <%
-                List<Donut> donuts = Donut.getMenu();
-                for (Donut donut : donuts) {
+                for (Tray i : trays) {
                     %>
                     <!-- Individual donut container styled with purple theme -->
                     <div class="donut">
-                        <h3><%= donut.getType() %></h3>
-                        <h4><%= donut.getFlavor() %> - $ <%= donut.getPrice() %></h4>
-
-                        <!-- Button for product details redirection -->
-                        <button1 onclick="window.location.href='product?product=<%= donut.getId() %>'">
-                            View Details
-                        </button1>
-                        
-                        <br>
-                        <br>
-                        <br>
-                        
-                        <button2 onclick="window.location.href='Cart?command=add&did=<%= donut.getId()%>&quantity=1' " >
-                        	Add to Cart
-                        </button2>
+                    	<% Donut donut = Donut.getDonut(i.getDonutID()); %>
+                        <h3><%=donut.getType() %>, <%= donut.getFlavor() %> </h3>
+                        <h4> Quantity:<%=i.getQuantity()%> </h4>
+                            
                     </div>
-                    <%
-                }
-                %>
-         	<form method="get" action = "./employee">
-           		<button type="submit" >Employee Portal</button>
-           	</form>
-            </div>
-        </div>
-    </body>
+                    <%}%>
+                </div>
+                </div>
+<h2>Baking Trays</h2>
+            <div class="outer">
+            <div class="wrapper" id="content">
+                <%
+                for (Tray i : bakingTrays) {
+                    %>
+                    <!-- Individual donut container styled with purple theme -->
+                    <div class="donut">
+                    	<% Donut donut = Donut.getDonut(i.getDonutID()); %>
+                        <h3><%=donut.getType() %>, <%= donut.getFlavor() %> </h3>
+                        <h4>Quantity: <%=i.getQuantity()%></h4>
+                    </div>
+                    <%}%>
+                </div>
+                </div>
+</body>
 </html>

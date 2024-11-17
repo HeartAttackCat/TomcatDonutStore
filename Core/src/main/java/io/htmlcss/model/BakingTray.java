@@ -1,7 +1,6 @@
 package io.htmlcss.model;
-import java.time.LocalDateTime;
-
 import io.htmlcss.db.DBFactory;
+import java.time.LocalDateTime;
 
 /**
  * This object is a model object for passing or storing a baking tray object.
@@ -20,10 +19,9 @@ public class BakingTray extends Tray {
         // End baking time is 20 minutes after start baking time
         super(-1, donutID, quantity);
         this.startBakingTime = startBakingTime;
-        endBakingTime = startBakingTime.plusMinutes(20);
-
+        this.endBakingTime = startBakingTime.plusMinutes(20);
         // Insert self into the database to get a trayID
-        this.trayID = DBFactory.getDatabaseFetcher().insertTray(this);
+        this.trayID = DBFactory.getDatabaseFetcher().insertTray(this); // This is the vile line.
         if(this.trayID == -1) {
             throw new RuntimeException("Failed to insert BakingTray into database.");
         }
@@ -31,7 +29,9 @@ public class BakingTray extends Tray {
 
     public BakingTray(int trayId, int donutID, int quantity, LocalDateTime startBakingTime) {
         // End baking time is 20 minutes after start baking time
-        this(donutID, quantity, startBakingTime);
+        super(-1, donutID, quantity);
+        this.startBakingTime = startBakingTime;
+        endBakingTime = startBakingTime.plusMinutes(20);
         this.trayID = trayId;
     }
 
