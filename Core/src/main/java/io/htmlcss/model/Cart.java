@@ -166,6 +166,7 @@ public class Cart {
     public static boolean placeOrder(Cart c) {
         return addCartToDB(c);
     }
+
     
     public void addOrder(Order order) {
     	this.items.add(order);    	
