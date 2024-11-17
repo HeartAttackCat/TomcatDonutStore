@@ -205,9 +205,7 @@
                         <h4> Quantity:<%=i.getQuantity()%> </h4>
                             
                     </div>
-                    <%
-                }
-                %>
+                    <%}%>
                 </div>
                 </div>
 <h2>Baking Trays</h2>
@@ -224,9 +222,7 @@
                         <h4>Quantity: <%=i.getQuantity()%></h4>
                             
                     </div>
-                    <%
-                }
-                %>
+                    <%}%>
                 </div>
                 </div>
 </body>
