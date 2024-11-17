@@ -1,15 +1,16 @@
 package io.htmlcss.api;
 
+import io.htmlcss.db.*;
+import io.htmlcss.model.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import io.htmlcss.model.BakingTray;
-import io.htmlcss.model.Cart;
-import io.htmlcss.model.Tray;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class Employee
@@ -30,7 +31,12 @@ public class Employee extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Tray.updateBakedTrays(); // Update the trays
+		List<Tray> t = Tray.updateBakedTrays(); // Update the trays
+		HttpSession sess = request.getSession();
+		//TODO: add error handling
+		sess.setAttribute("orders", Cart.getActiveOrders());
+		sess.setAttribute("inv", Tray.getInventoryTrays());
+		sess.setAttribute("baking", Tray.getBakingTrays());
 		String param = request.getParameter("command");
 		if (param == null) {
 			request.getRequestDispatcher("/WEB-INF/employee/Employee.jsp").forward(request, response);
@@ -41,6 +47,9 @@ public class Employee extends HttpServlet {
 			String date = request.getParameter("date");
 			Cart.completeOrder(date, id);
 			param = "order";
+			sess.setAttribute("orders", Cart.getActiveOrders());
+			
+			
 		}
 		
 		if(param.equalsIgnoreCase("trayAdd")) {
@@ -52,12 +61,12 @@ public class Employee extends HttpServlet {
 				int id = Integer.parseInt(request.getParameter("donuts"));
 				LocalDateTime date = LocalDateTime.now();
 				System.out.println(date);
-				@SuppressWarnings("unused")
 				Tray tray = new BakingTray(id, 20, date);
 				
 			}
 
 			param="tray";
+			sess.setAttribute("baking", Tray.getBakingTrays());
 		}
 		
 		if(param.equalsIgnoreCase("order")) {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ page session="true" %>
 <%@ page import="io.htmlcss.api.*, io.htmlcss.db.*, io.htmlcss.model.*, java.util.Enumeration, java.util.List" %>
 <!DOCTYPE html>
 <html>
@@ -147,8 +148,7 @@
 </head>
 <body>
 <h1>Orders</h1><br>
-
-                <%! List<Cart> orders = Cart.getActiveOrders(); %>
+				<% List<Cart> orders = (List<Cart>) request.getSession().getAttribute("orders"); %>
             <div class="outer">
             <div class="wrapper" id="content">
                 <%

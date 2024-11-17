@@ -191,8 +191,9 @@
            	</form>
 </div>
 <h2>Ready Trays</h2><br>
+<% List<Tray> bakingTrays = (List<Tray>) request.getSession().getAttribute("baking"); %>
+<% List<Tray> trays = (List<Tray>) request.getSession().getAttribute("inv"); %>
 
-                <%! List<Tray> trays = Tray.getInventoryTrays(); %>
                                         <div class="outer">
             <div class="wrapper" id="content">
                 <%
@@ -209,7 +210,6 @@
                 </div>
                 </div>
 <h2>Baking Trays</h2>
-                <%! List<Tray> bakingTrays = Tray.getBakingTrays(); %>
             <div class="outer">
             <div class="wrapper" id="content">
                 <%

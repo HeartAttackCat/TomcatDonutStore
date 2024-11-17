@@ -462,32 +462,34 @@ public class DatabaseFetcher {
 		}
 	}
 
-public ReportData generateStaleReport(String date, int range) {
-    ReportData data = new ReportData();
-    Integer id;
-    Integer quant;
-    try {
-        String query = "select id, quantity from inventory where expireTime > Date_sub(?, INTERVAL ? DAY) and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
-        PreparedStatement stmt = dbConnection.prepareStatement(query);
-        stmt.setString(1, date);
-        stmt.setInt(2, range);
-        stmt.setString(3, date);
-        ResultSet records = stmt.executeQuery();
-        
-        // Adds it all into the data object
-        while (records.next()){
-            id = records.getInt(1);
-            quant = records.getInt(2);
-            data.addItemQuantity(id, quant);
-        }
-        
-        return data;
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    
-    return null;
-}
+		
+		public ReportData generateStaleReport(String date, int range) {
+			ReportData data = new ReportData();
+			Integer id;
+			Integer quant;
+			try {
+				String query = "select id, quantity from inventory where expireTime > Date_sub(?, INTERVAL ? DAY) and expireTime <= STR_TO_DATE(?, \"%Y-%m-%d\")";
+				PreparedStatement stmt = dbConnection.prepareStatement(query);
+				stmt.setString(1, date);
+				stmt.setInt(2, range);
+				stmt.setString(3, date);
+				ResultSet records = stmt.executeQuery();
+				
+				// Adds it all into the data object
+				while (records.next()){
+					id = records.getInt(1);
+					quant = records.getInt(2);
+					data.addItemQuantity(id, quant);
+				}
+				
+				return data;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			return data;
+
+	}
 
 	public int insertTray(Tray t) {
 		// Tray can either be a BakingTray or an InventoryTray
@@ -765,27 +767,37 @@ public ReportData generateStaleReport(String date, int range) {
 		Customer goku = null;
 		Cart tCart = null;
 		int quant = 0;
+		boolean status;
 		ArrayList<Cart> orders = new ArrayList<Cart>();
 		try {
-			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder WHERE complete=0");
+			PreparedStatement stmt = dbConnection.prepareStatement("SELECT * FROM dOrder");
 			ResultSet records = stmt.executeQuery();
-			
+			System.out.println(records);
 			while(records.next()) {
-				
+
 				tDonut = this.getDonut(records.getInt(2));
 				goku = this.getCustomer(records.getInt(4));
 				quant = records.getInt(5);
 				temp = new Order(tDonut, quant);
-				tCart = new Cart(goku, temp, false, records.getInt(1), records.getString(3));
+				status = records.getBoolean(9);
+				tCart = new Cart(goku, temp, status, records.getInt(1), records.getString(3));
 				orders.add(tCart);
 			}
 			
 			orders = this.mergeCarts(orders);
-			return orders;
+			ArrayList<Cart> clean = new ArrayList<Cart>();
+			for(Cart i: orders) {
+				if (!i.getStatus()) {
+					clean.add(i);
+				}
+			}
+			
+			return clean;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return null;
 	}
 	
