@@ -44,12 +44,15 @@ public class Employee extends HttpServlet {
 		}
 		
 		if(param.equalsIgnoreCase("trayAdd")) {
-			String p = request.getParameter("id");
+			String p = request.getParameter("donuts");
+			System.out.println("Hello");
+			System.out.println(p);
 	
 			if (p != null) {
 				int id = Integer.parseInt(request.getParameter("donuts"));
 				LocalDateTime date = LocalDateTime.now();
 				Tray tray = new BakingTray(id, 20, date);
+				
 			}
 
 			param="tray";
