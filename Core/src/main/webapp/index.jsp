@@ -215,6 +215,9 @@
                     <%
                 }
                 %>
+         	<form method="get" action = "./employee">
+           		<button type="submit" >Employee Portal</button>
+           	</form>
             </div>
         </div>
     </body>
