@@ -19,8 +19,7 @@ public class BakingTray extends Tray {
         // End baking time is 20 minutes after start baking time
         super(-1, donutID, quantity);
         this.startBakingTime = startBakingTime;
-        endBakingTime = startBakingTime.plusMinutes(20);
-
+        this.endBakingTime = startBakingTime.plusMinutes(20);
         // Insert self into the database to get a trayID
         this.trayID = DBFactory.getDatabaseFetcher().insertTray(this); // This is the vile line.
         if(this.trayID == -1) {

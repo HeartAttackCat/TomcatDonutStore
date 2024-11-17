@@ -51,6 +51,7 @@ public class Employee extends HttpServlet {
 			if (p != null) {
 				int id = Integer.parseInt(request.getParameter("donuts"));
 				LocalDateTime date = LocalDateTime.now();
+				System.out.println(date);
 				Tray tray = new BakingTray(id, 20, date);
 				
 			}

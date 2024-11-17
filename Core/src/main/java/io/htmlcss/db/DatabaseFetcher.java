@@ -508,20 +508,27 @@ public class DatabaseFetcher {
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			stmt.setInt(1, t.getDonutID());
 			stmt.setInt(2, t.getQuantity());
-
+			LocalDateTime temp = t.getStartBakingTime();
 			// Convert dates to ms since epoch
-			long startBakingTime = t.getStartBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-			long endBakingTime = t.getEndBakingTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			String startBakingTime = temp.getYear() + "-" + temp.getMonthValue() + "-" + temp.getDayOfMonth();
+			startBakingTime += " " + temp.getHour() + ":" +temp.getMinute() + ":" +temp.getSecond();
 			
-			stmt.setDate(3, new java.sql.Date(startBakingTime));
-			stmt.setDate(4, new java.sql.Date(endBakingTime));
+			temp = t.getEndBakingTime();
+			String endBakingTime = temp.getYear() + "-" + temp.getMonthValue() + "-" + temp.getDayOfMonth();
+			endBakingTime += " " + temp.getHour() + ":" +temp.getMinute() + ":" + temp.getSecond();
+			
+			System.out.println(endBakingTime);
+			System.out.println(startBakingTime);
+			stmt.setString(3, startBakingTime);
+			stmt.setString(4, endBakingTime);
 			stmt.executeUpdate();
 
 			// Return the trayID
 			String query = "SELECT id FROM bakingDonuts WHERE donutID = ? AND startBakingTime = ?";
 			PreparedStatement stmt2 = dbConnection.prepareStatement(query);
 			stmt2.setInt(1, t.getDonutID());
-			stmt2.setDate(2, new java.sql.Date(startBakingTime));
+			stmt2.setString(2, startBakingTime);
+			System.out.println(endBakingTime);
 			ResultSet records = stmt2.executeQuery();
 
 			if (records.next()) {
