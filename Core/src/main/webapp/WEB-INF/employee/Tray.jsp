@@ -210,7 +210,7 @@
                 </div>
 <h2>Baking Trays</h2>
                 <%! List<Tray> bakingTrays = Tray.getBakingTrays(); %>
-                        <div class="outer">
+            <div class="outer">
             <div class="wrapper" id="content">
                 <%
                 for (Tray i : bakingTrays) {
@@ -220,7 +220,6 @@
                     	<% Donut donut = Donut.getDonut(i.getDonutID()); %>
                         <h3><%=donut.getType() %>, <%= donut.getFlavor() %> </h3>
                         <h4>Quantity: <%=i.getQuantity()%></h4>
-                            
                     </div>
                     <%}%>
                 </div>

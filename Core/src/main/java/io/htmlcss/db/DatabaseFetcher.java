@@ -223,7 +223,6 @@ public class DatabaseFetcher {
 			totalPrice += temp.getQuantity() * temp.getItem().getPrice();
         }
 		// Mass insert into the table!
-		System.out.println(items.size());
 		for (int i = 0; i < items.size(); i++){
 			if (!this.insertOrder(items.get(i), orderID, totalPrice, totalQuantity, customerID, date))
 				return false;
@@ -310,7 +309,6 @@ public class DatabaseFetcher {
 			while(records.next()) {
 				max = records.getInt(1);
 			}
-			System.out.println(max);
 			if (max == -1){
 				return 0;
 			}
@@ -525,11 +523,13 @@ public class DatabaseFetcher {
 			stmt2.setInt(1, t.getDonutID());
 			stmt2.setDate(2, new java.sql.Date(startBakingTime));
 			ResultSet records = stmt2.executeQuery();
+
 			if (records.next()) {
 				return records.getInt(1);
 			} else {
 				return -1;
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
@@ -615,7 +615,6 @@ public class DatabaseFetcher {
 		try {
 			String sql = "DELETE FROM bakingDonuts WHERE id = ?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
-			System.out.println(t.getTrayID());
 			stmt.setInt(1, t.getTrayID());
 			stmt.executeUpdate();
 			return true;
@@ -699,9 +698,6 @@ public class DatabaseFetcher {
 	 */
 	public boolean updateOrder(String date, int id) {
 		try {
-			System.out.println(date);
-
-			System.out.println(id);
 		    String sql = "update dOrder set complete=1 where orderID=? and purchaseDate=?";
 			PreparedStatement stmt = dbConnection.prepareStatement(sql);
 			
