@@ -798,7 +798,7 @@ public class DatabaseFetcher {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return orders;
 	}
 	
 	/**

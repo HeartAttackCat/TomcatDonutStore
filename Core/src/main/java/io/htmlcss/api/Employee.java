@@ -33,7 +33,6 @@ public class Employee extends HttpServlet {
 		// TODO Auto-generated method stub
 		List<Tray> t = Tray.updateBakedTrays(); // Update the trays
 		HttpSession sess = request.getSession();
-		//TODO: add error handling
 		sess.setAttribute("orders", Cart.getActiveOrders());
 		sess.setAttribute("inv", Tray.getInventoryTrays());
 		sess.setAttribute("baking", Tray.getBakingTrays());
@@ -49,13 +48,10 @@ public class Employee extends HttpServlet {
 			param = "order";
 			sess.setAttribute("orders", Cart.getActiveOrders());
 			
-			
 		}
 		
 		if(param.equalsIgnoreCase("trayAdd")) {
 			String p = request.getParameter("donuts");
-			System.out.println("Hello");
-			System.out.println(p);
 	
 			if (p != null) {
 				int id = Integer.parseInt(request.getParameter("donuts"));

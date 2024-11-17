@@ -9,6 +9,7 @@ import io.htmlcss.model.Customer;
 import io.htmlcss.model.Order;
 import io.htmlcss.model.Tray;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -76,7 +77,7 @@ public class Checkout extends HttpServlet {
 		}
 		
 		if(cart == null) {
-			String path = "WEB-INF/empty.jsp";
+			String path = "/WEB-INF/empty.jsp";
 			request.getRequestDispatcher(path).forward(request, response);
 			return;
 		}
@@ -90,16 +91,16 @@ public class Checkout extends HttpServlet {
 		cart.setCustomer(customer);
 		
 		if(!this.checkInventory(cart)) {
-			this.updateInventory(cart);
-			String path = "WEB-INF/NoInventory.jsp";
+			String path = "/WEB-INF/NoInventory.jsp";
 			request.getRequestDispatcher(path).forward(request, response);
 			return;
 		}
 		
 		db.insertCart(cart);
 		// Pass this vital information onto the customer
-        String path = String.format("WEB-INF/Receipt.jsp?oID=%d&date=%s", cart.getOrderID(), cart.getDate());
+        String path = String.format("/WEB-INF/Receipt.jsp?oID=%d&date=%s", cart.getOrderID(), cart.getDate());
 
+		this.updateInventory(cart);
         
         request.setAttribute("oID", cart.getOrderID());
         request.setAttribute("date", cart.getDate());
@@ -113,7 +114,6 @@ public class Checkout extends HttpServlet {
 		boolean status = true;
 		for(Order i: cart.getItems()) {
 			status = status && Tray.hasEnoughDonutsInInventory(i.getItem(), i.getQuantity());
-			System.out.println(status);
 		}
 		return status;
 	}
