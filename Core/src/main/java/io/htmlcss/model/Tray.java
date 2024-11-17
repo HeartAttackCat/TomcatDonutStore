@@ -131,19 +131,25 @@ public abstract class Tray {
         List<Tray> bakedTrays = new ArrayList<>();
 
         // Check each tray in the list to see if it is a BakingTray
-        for (Tray tray : trays) {
+        System.out.println(trays.size());
+        int i = 0;
+        while (i < trays.size()) {
+        	Tray tray = trays.get(i);
             if (tray instanceof BakingTray && ((BakingTray) tray).isDoneBaking()) {
                 // Convert the BakingTray to an InventoryTray
                 InventoryTray inventoryTray = new InventoryTray((BakingTray) tray);
-                
+
                 // Add the InventoryTray to the output list of trays & database
                 bakedTrays.add(inventoryTray);
                 db.insertTray(inventoryTray);
                 
                 // Remove the BakingTray from the list of trays & database
-                trays.remove(tray);
-                db.deleteTray(tray);
+//                trays.remove(tray);
+                trays.remove(i);
+                db.deleteTray((BakingTray) tray);
+                i--;
             }
+            i++;
         }
 
         return bakedTrays;

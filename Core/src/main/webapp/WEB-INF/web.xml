@@ -60,6 +60,17 @@
   		<transport-guarantee>NONE</transport-guarantee>
   	</user-data-constraint>
   </security-constraint>
+  <security-constraint>
+  	<web-resource-collection>
+  		<web-resource-name>employeearea</web-resource-name>
+  		<url-pattern>/employee</url-pattern>
+  	</web-resource-collection>
+  	<auth-constraint>
+  		<role-name>employee</role-name></auth-constraint>
+  	<user-data-constraint>
+  		<transport-guarantee>NONE</transport-guarantee>
+  	</user-data-constraint>
+  </security-constraint>
   <servlet>
   	<servlet-name>adminservlet</servlet-name>
   	<servlet-class>io.htmlcss.api.Admin</servlet-class>
@@ -85,5 +96,13 @@
   	<servlet-name>user-cart</servlet-name>
   	<url-pattern>/Cart</url-pattern>
   </servlet-mapping>
-
+  
+  <servlet>
+  	<servlet-name>employeeservlet</servlet-name>
+  	<servlet-class>io.htmlcss.api.Employee</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>employeeservlet</servlet-name>
+  	<url-pattern>/employee</url-pattern>
+  </servlet-mapping>
 </web-app>
