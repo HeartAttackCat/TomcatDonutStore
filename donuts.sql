@@ -29,10 +29,12 @@ INSERT INTO donuts (id, dType, flavor, price, donutDesc, img) VALUES
 (8, "Filled" , "Grape", 1.99 , "The grape filled donut sourced from the most premium hydrated raisins. Ask anybody what the top 3 donuts at Grilly's donuts are, and number 2 or 3 are almost always sometimes listed as the grape filled donut. While it's not the lemon filled donut, it still a good donut. We spent years studying the way of the grape donut. Perfecting the recipe to achieve its consistently heavenly taste, as our patreons commonly describe. Purchase it before someone else does, they sell fast.", "filledGrape"),
 (9, "Filled" , "Custard", 1.99, "The custard donut for those who want the danger. Those who want the adventure of what makes a donut. Our ingredients are questionable, but our recipe is bold. The custard flavor will hit your taste buds like nothing before it. This donut when the recipe was finalized was a revolutionary recipe in Flavor Town. We're the only place that is brave enough to bring this recipe out of Flavor Town and directly to our store. Be bold and buy our custard.", "filledCustard");
 
-INSERT INTO bakingDonuts (id, quantity, donutID, startBakingTime, endBakingTime) VALUES (3, 20, 4, "2024-10-12 5:00:00", "2024-10-12 7:00:00"),
-(4, 20, 7, "2024-10-12 5:00:00", "2024-10-12 7:00:00"), (5, 20, 1, "2024-10-12 5:00:00","2024-10-12 7:00:00");
+INSERT INTO bakingDonuts (id, quantity, donutID, startBakingTime, endBakingTime) VALUES (8, 20, 4, "2024-10-12 5:00:00", "2024-10-12 7:00:00"),
+(9, 20, 7, "2024-10-12 5:00:00", "2024-10-12 7:00:00"), (10, 20, 1, "2024-10-12 5:00:00","2024-10-12 7:00:00");
 
-INSERT INTO inventory (id, quantity, donutID, expireTime) VALUES (1, 10, 1, "2024-10-11"), (2, 5, 2, "2024-10-11");
+INSERT INTO inventory (id, quantity, donutID, expireTime) VALUES (1, 10, 1, "2024-10-11"), 
+(2, 5, 2, "2024-10-11"), (3, 7, 1, "2024-11-30"), (4, 7, 2, "2024-11-30"), (5, 7, 4, "2024-11-30"),
+(6, 7, 8, "2024-11-30"), (7, 7, 9, "2024-11-30");
 
 Insert Into dOrder (orderID, itemID, purchaseDate, customerID, quantity, price, totalQuant, totalPrice, complete) VALUES (0, 2, "2024-10-10", 1, 10,  10.00, 20, 15.00, 1), 
 (0, 4, "2024-10-10", 1, 10,  5.00, 20, 15.00, 1), (0, 3, "2024-10-9", 2, 1,  2.00, 1, 2.0, 1),
