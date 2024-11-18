@@ -49,7 +49,7 @@
             .cart-icon {
                 position: absolute;
                 top: 10px; /* Adjusted for vertical alignment */
-                right: 20px; /* Adjusted to move it closer to the right side */
+                right: 10px; /* Adjusted to move it closer to the right side */
                 width: 60px;
                 height: 60px;
                 cursor: pointer;
@@ -64,7 +64,7 @@
             .admin-icon {
                 position: absolute;
                 top: 10px; /* Adjusted for vertical alignment */
-                right: 920px; /* Adjusted to move it closer to the right side */
+                right: 940px; /* Adjusted to move it closer to the right side */
                 width: 60px;
                 height: 60px;
                 cursor: pointer;
@@ -72,6 +72,21 @@
             }
 
             .admin-icon:hover {
+                transform: scale(1.1); /* Slight zoom effect on hover */
+            }
+            
+            /* Employee Icon Styling */
+            .employee-icon {
+                position: absolute;
+                top: 10px; /* Adjusted for vertical alignment */
+                right: 890px; /* Adjusted to move it closer to the right side */
+                width: 60px;
+                height: 60px;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+
+            .employee-icon:hover {
                 transform: scale(1.1); /* Slight zoom effect on hover */
             }
 
@@ -182,9 +197,13 @@
             </a>
             
             <a href="admin">
-                <img src="./images/profile-icon-avatar-icon-user-icon-person-icon-free-png.png" alt="Admin Icon" class="admin-icon">
+                <img src="./images/admin.png" alt="Admin Icon" class="admin-icon">
             </a>
             
+            <a href="./employee">
+                <img src="./images/employee.png" alt="employee Icon" class="employee-icon">
+            </a>
+
         </div>
 
         <!-- Outer container for content -->
@@ -215,9 +234,6 @@
                     <%
                 }
                 %>
-         	<form method="get" action = "./employee">
-           		<button type="submit" >Employee Portal</button>
-           	</form>
             </div>
         </div>
     </body>
