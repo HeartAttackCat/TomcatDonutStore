@@ -14,65 +14,63 @@ We were tasked to create a website for a donut store. The store was meant to be 
 The store requirements included the following...
 
 Customer Functionality:
+	- Allow customers to explore the menu, select products, and place an order.
 
-Allow customers to explore the menu, select products, and place an order.
 Employee Functionality:
+	- Present the orders to the employees.
+	- Enable employees to update the order status to "processed."
+	- Allow employees to enter inventory information into the application.
 
-Present the orders to the employees.
-Enable employees to update the order status to "processed."
-Allow employees to enter inventory information into the application.
 Administrator Functionality:
+	- Update the menu (add, edit, delete, and view items).
+	- View administration reports.
 
-Update the menu (add, edit, delete, and view items).
-View administration reports.
 Doughnut Types:
-
-Raised:
-	Glazed
-	Sugar
-	Chocolate
-Cake:
-	Plain
-	Chocolate
-	Sugar
-Filled:
-	Lemon
-	Grape
-	Custard
+	Raised:
+		Glazed
+		Sugar
+		Chocolate
+	Cake:
+		Plain
+		Chocolate
+		Sugar
+	Filled:
+		Lemon
+		Grape
+		Custard
 
 Preparation Process:
+	- Employees prepare 20 doughnuts of each type at 5:00 am daily.
+	- Counter trays are numbered for tracking baking time and available quantity.
+	- Each tray is filled with a single doughnut type, and baking time is marked.
 
-Employees prepare 20 doughnuts of each type at 5:00 am daily.
-Counter trays are numbered for tracking baking time and available quantity.
-Each tray is filled with a single doughnut type, and baking time is marked.
 Order Management:
+	- Orders begin at 7:00 am.
+	- Each order includes:
+	- Automatically generated number
+	- Date
+	- Item number
+	- Name
+	- Quantity
+	- Price
+	- Total quantity
+	- Total price
+	- The application generates a formatted receipt.
+	- Order numbers must be unique for the same date.
+	- The factory serves up to 200 doughnuts daily (limit is flexible and can be updated by the administrator).
 
-Orders begin at 7:00 am.
-Each order includes:
-Automatically generated number
-Date
-Item number
-Name
-Quantity
-Price
-Total quantity
-Total price
-The application generates a formatted receipt.
-Order numbers must be unique for the same date.
-The factory serves up to 200 doughnuts daily (limit is flexible and can be updated by the administrator).
 Stale Doughnut Management:
-
-Stale doughnuts (over two days old) are removed from the store at the end of each day.
-The inventory is updated accordingly.
+	- Stale doughnuts (over two days old) are removed from the store at the end of each day.
+	- The inventory is updated accordingly.
 
 Reports:
-Weekly, monthly, and yearly sales summaries, including:
-Doughnut types
-Price
-Quantity
-Total quantity
-Total price
-Weekly, monthly, and yearly summaries of stale doughnuts.
+	- Weekly, monthly, and yearly sales summaries, including:
+	- Doughnut types
+	- Price
+	- Quantity
+	- Total quantity
+	- Total price
+	- Weekly, monthly, and yearly summaries of stale doughnuts.
 
 ----------------
 
