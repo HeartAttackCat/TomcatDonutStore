@@ -1,0 +1,7 @@
+customerID,firstName, lastName, zipCode, customerAddress, phoneNumber, email, cardID
+1,"John","Goettsche",88220,"Dirt Lane","(505)-262-1460","Sandwhich@bread.com","1234567890123456"
+2,"Ramaya","Ramaya",88324,"Road","(505)-314-1518","Induction@nmt.com","0852582479531379"
+3,"Goku","Son",63472,"7 Dragon Balls Road","(505)-267-7235","Goku@gmail.com","94341372362177345"
+4,"Churro","Churrito",83472,"Socorro Highway","(623)-262-0634","Cat@Ethernet.com","63233723723723"
+5,"Luigi","Mario",37234,"Pizza Lane","(505)-236-1523","Luigi@Pipes.com","2346236226758456"
+6,"Jack","Donuts",26236,"Donut Champion Road","(505)-269-1362","MrDonut@gmail.com","2472383467346"
